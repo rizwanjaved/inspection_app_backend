@@ -175,9 +175,9 @@ return [
         Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         Cviebrock\EloquentTaggable\ServiceProvider::class,
-        \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
-        \InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
-        \InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
+        // \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
+        // \InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
+        // \InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
         Spatie\Analytics\AnalyticsServiceProvider::class,
     ],
 
