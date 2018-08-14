@@ -19,6 +19,7 @@
         "cviebrock/eloquent-taggable": "^3.3.",
         "doctrine/dbal": "^2.6",
         "fideloper/proxy": "~4.0",
+        "fzaninotto/faker": "^1.8",
         "infyomlabs/core-templates": "5.3.x-dev",
         "infyomlabs/generator-builder": "dev-master",
         "infyomlabs/laravel-generator": "^1.0",
@@ -39,7 +40,6 @@
         "barryvdh/laravel-ide-helper": "^2.4",
         "nunomaduro/collision": "~1.1",
         "filp/whoops": "~2.1",
-        "fzaninotto/faker": "~1.7",
         "laravel/dusk": "~3.0",
         "mockery/mockery": "~1.0",
         "phpunit/phpunit": "~7.0"
