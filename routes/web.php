@@ -188,6 +188,20 @@ Route::group(['prefix' => 'admin','namespace'=>'Admin', 'middleware' => 'admin',
     Route::post('task/{task}/edit', 'TaskController@update')->name('update');
     Route::post('task/{task}/delete', 'TaskController@delete')->name('delete');
 
+    // live tv app admin routes
+
+    Route::resource('category', 'CategoryController');
+    Route::resource('region', 'RegionController');
+    Route::resource('channel', 'ChannelController');
+    Route::resource('event', 'EventController');
+    // vod section 
+    Route::resource('vod', 'VodController');
+    Route::get('vodc', 'VodController@catIndex')->name('catIndex');
+    Route::get('vodc/create', 'VodController@catCreate')->name('catCreate');
+    Route::post('vodc/create', 'VodController@catStore')->name('catStore');
+    Route::post('vod/{task}/edit', 'VodController@catUpdate')->name('update');
+    Route::post('vod/{task}/delete', 'VodController@catDelete')->name('delete');
+
 });
 
 
