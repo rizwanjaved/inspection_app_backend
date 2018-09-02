@@ -11,5 +11,6 @@ return array(
     'site_name' => 'SiteName',
     'home' => 'Home',
     'dashboard' => 'Dashboard',
+    'wrong' => 'Something Went Wrong'
 
 );

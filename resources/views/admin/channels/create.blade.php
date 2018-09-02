@@ -13,6 +13,12 @@
     <link href="{{ asset('assets/vendors/bootstrap-tagsinput/css/bootstrap-tagsinput.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/pages/blog.css') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/jasny-bootstrap/css/jasny-bootstrap.css') }}">
+     <style>
+    .label {
+        white-space:unset !important;
+        word-wrap: break-word !important;
+    }
+    </style>
     <!--end of page level css-->
 @stop
 
@@ -21,7 +27,7 @@
 @section('content')
 <section class="content-header">
     <!--section starts-->
-    <h1>@lang('blog/title.add-blog')</h1>
+    <h1>Add New Channel</h1>
     <ol class="breadcrumb">
         <li>
             <a href="{{ route('admin.dashboard') }}"> <i class="livicon" data-name="home" data-size="14" data-c="#000" data-loop="true"></i>
@@ -29,9 +35,9 @@
             </a>
         </li>
         <li>
-            <a href="#">@lang('blog/title.blog')</a>
+            <a href="#">Channels</a>
         </li>
-        <li class="active">@lang('blog/title.add-blog')</li>
+        <li class="active">Add New Channel</li>
     </ol>
 </section>
 <!--section ends-->
@@ -46,6 +52,7 @@
                  <div class="row">
                     <div class="col-sm-8">
                         <div class="form-group {{ $errors->first('title', 'has-error') }}">
+                            {!! Form::label('title','Title') !!}
                             {!! Form::text('title', null, array('class' => 'form-control input-lg','placeholder'=> trans('blog/form.ph-title'))) !!}
                             <span class="help-block">{{ $errors->first('title', ':message') }}</span>
                         </div>
@@ -53,24 +60,23 @@
                             {!! Form::textarea('content', NULL, array('placeholder'=>trans('blog/form.ph-content'),'rows'=>'5','class'=>'textarea form-control','style'=>'style="width: 100%; height: 200px !important; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"')) !!}
                             <span class="help-block">{{ $errors->first('content', ':message') }}</span>
                         </div>
-                        <div class="form-group {{ $errors->first('title', 'has-error') }}">
+                        <div class="form-group {{ $errors->first('links', 'has-error') }}">
+                            {!! Form::label('links','Links') !!}
                             {!! Form::text('links', null, array('class' => 'form-control input-lg', 'data-role'=>"tagsinput", 'placeholder'=>trans('blog/form.tags'))) !!}
-                            <span class="help-block">{{ $errors->first('title', ':message') }}</span>
+                            <span class="help-block">{{ $errors->first('links', ':message') }}</span>
                         </div>
                     </div>
                     <!-- /.col-sm-8 -->
                     <div class="col-sm-4">
-                        <div class="form-group {{ $errors->first('blog_category_id', 'has-error') }}">
-                            <label for="blog_category" class="">Blog Category</label>
-                            {!! Form::label('blog_category_id', trans('blog/form.ll-postcategory')) !!}
+                        <div class="form-group {{ $errors->first('category_id', 'has-error') }}">
+                            {!! Form::label('category_id',"Category") !!}
                             {!! Form::select('category_id',$categories ,null, array('class' => 'form-control select2', 'id'=>'blog_category' ,'placeholder'=>trans('blog/form.select-category'))) !!}
-                            <span class="help-block">{{ $errors->first('blog_category_id', ':message') }}</span>
+                            <span class="help-block">{{ $errors->first('category_id', ':message') }}</span>
                         </div>
-                         <div class="form-group {{ $errors->first('blog_category_id', 'has-error') }}">
-                            <label for="blog_category" class="">Blog Category</label>
-                            {!! Form::label('blog_category_id', trans('blog/form.ll-postcategory')) !!}
-                            {!! Form::select('region_id',$regions ,null, array('class' => 'form-control select2', 'id'=>'blog_category' ,'placeholder'=>trans('blog/form.select-category'))) !!}
-                            <span class="help-block">{{ $errors->first('blog_category_id', ':message') }}</span>
+                         <div class="form-group {{ $errors->first('region_id', 'has-error') }}">
+                            {!! Form::label('region_id',"Region") !!}
+                            {!! Form::select('region_id',$regions ,null, array('class' => 'form-control select2', 'id'=>'blog_category' ,'placeholder'=>trans('Select Region'))) !!}
+                            <span class="help-block">{{ $errors->first('region_id', ':message') }}</span>
                         </div>
                         <label>@lang('blog/form.lb-featured-img')</label>
                         <div class="form-group">
@@ -83,20 +89,25 @@
                                 </div>
                                 <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
                                 <div>
-                                            <span class="btn btn-primary btn-file">
-                                                <span class="fileinput-new">Select image</span>
-                                                <span class="fileinput-exists">Change</span>
-                                                <input type="file" name="image" id="pic" accept="image/*" />
-                                            </span>
+                                    <span class="btn btn-primary btn-file">
+                                        <span class="fileinput-new">Select image</span>
+                                        <span class="fileinput-exists">Change</span>
+                                        <input type="file" name="image" id="pic" accept="image/*" />
+                                    </span>
                                     <span class="btn btn-primary fileinput-exists" data-dismiss="fileinput">Remove</span>
                                 </div>
+                                <span class="help-block">{{ $errors->first('image', ':message') }}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">@lang('blog/form.publish')</button>
-                            <a href="{!! URL::to('admin/channel/create') !!}"
-                               class="btn btn-danger">@lang('blog/form.discard')</a>
+                            <a href="{!! URL::to('admin/channel') !!}"
+                               class="btn btn-danger">@lang('blog/form.discard')
+                            </a>
                         </div>
+                       <p>
+                            <span class="help-block text-danger">{{ $errors->first('image', ':message') }}</span>                       
+                       </p>
                     </div>
                     <!-- /.col-sm-4 --> </div>
                 {!! Form::close() !!}

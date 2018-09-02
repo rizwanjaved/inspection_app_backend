@@ -22,7 +22,7 @@
                 @lang('general.dashboard')
             </a>
         </li>
-        <li><a href="#">@lang('blog/title.blog')</a></li>
+        <li><a href="#">Events Event List</a></li>
         <li class="active">@lang('blog/title.bloglist')</li>
     </ol>
 </section>
@@ -34,7 +34,7 @@
         <div class="card panel-primary ">
             <div class="card-heading clearfix">
                 <h4 class="card-title float-left"> <i class="livicon" data-name="users" data-size="16" data-loop="true" data-c="#fff" data-hc="white"></i>
-                    @lang('blog/title.bloglist')
+                   Event List
                 </h4>
                 <div class="float-right">
                     <a href="{{ URL::to('admin/event/create') }}" class="btn btn-sm btn-default"><span class="fa fa-plus"></span> @lang('button.create')</a>
@@ -48,39 +48,47 @@
                         <tr class="filters">
                             <th>@lang('blog/table.id')</th>
                             <th>@lang('blog/table.title')</th>
-                            <th>@lang('blog/table.comments')</th>
+                            <th>channels</th>
+                            <th>From</th>
+                            <th>To</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($channels))
-                        @foreach ($channels as $channel)
+                    @if(!empty($events))
+                        @foreach ($events as $event)
                             <tr>
-                                <td>{{ $channel->id }}</td>
-                                <td>{{ $channel->title }}</td>
-                                <td>""</td>
-                                <td>{{ $channel->created_at->diffForHumans() }}</td>
+                                <td>{{ $event->id }}</td>
+                                <td>{{ $event->title }}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/channel/' . $channel->id ) }}"><i class="livicon"
+                                 @foreach ($event->channels as $channel)
+                                    <span class="label label-danger square">{{ $channel->title }}</span>
+                                 @endforeach
+                                </td>
+                                <td>{{ $event->f_from }}</td>
+                                <td>{{ $event->f_to }}</td>
+                                <td>{{ $event->created_at->diffForHumans() }}</td>
+                                <td>
+                                    <a href="{{ URL::to('admin/event/' . $event->id ) }}"><i class="livicon"
                                                                                                      data-name="info"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
-                                                                                                     title="@lang('blog/table.view-blog-comment')"></i></a>
-                                    <a href="{{ URL::to('admin/channel/' . $channel->id . '/edit' ) }}"><i class="livicon"
+                                                                                                     title="View Event"></i></a>
+                                    <a href="{{ URL::to('admin/event/' . $event->id . '/edit' ) }}"><i class="livicon"
                                                                                                      data-name="edit"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
-                                                                                                     title="@lang('blog/table.update-blog')"></i></a>
-                                    <a href="{{ route('admin.blog.confirm-delete', $channel->id) }}" data-toggle="modal" data-id="{{$channel->id }}"
+                                                                                                     title="Edit Event"></i></a>
+                                    <a href="{{ route('admin.event.destroy', $event->id) }}" data-toggle="modal" data-id="{{$event->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"
-                                                                        title="@lang('blog/table.delete-blog')"></i></a>
+                                                                        title="Delete Event"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -110,11 +118,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="deleteLabel">Delete Blog</h4>
+                    <h4 class="modal-title" id="deleteLabel">Delete Event</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure to delete this blog? This operation is irreversible.
+                    Are you sure to delete this Event? This operation is irreversible.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -135,7 +143,7 @@ $('#delete_confirm').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
     var $recipient = button.data('id');
     var modal = $(this)
-    modal.find('.modal-footer a').prop("href",$url_path+"/admin/blog/"+$recipient+"/delete");
+    modal.find('.modal-footer a').prop("href",$url_path+"/admin/event/"+$recipient+"/delete");
 })
 </script>
 @stop

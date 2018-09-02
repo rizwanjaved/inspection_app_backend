@@ -16,6 +16,9 @@ use Sentinel;
 use Intervention\Image\Facades\Image;
 use DOMDocument;
 use Carbon\Carbon;
+use Validator;
+use Redirect;
+
 
 
 class EventController extends Controller
@@ -27,9 +30,9 @@ class EventController extends Controller
      */
     public function index()
     {
-         $vods = Vod::all();
+         $events = Event::all();
         // Show the page
-        return view('admin.vod.index', compact('events'));
+        return view('admin.events.index', compact('events'));
     }
 
     /**
@@ -60,16 +63,22 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        $this->Validate($request,[
+            'title' => 'required|min:3',
+            'dates' => 'required',
+            'channels' => 'required',
+            'event_type' => 'required',
+            'event_status' => 'required',
+        ]);
         $dates = explode('-', $request->dates);
         $event = new Event($request->except('channels', 'dates'));
         $event->time_from = Carbon::parse(trim($dates[0]))->toDateTimeString();
         $event->time_to = Carbon::parse(trim($dates[1]))->toDateTimeString();
-        $event->save();
-        $event->attachChannels($request->channels);
-        if($event->id) {
-            return redirect('admin/channel')->with('success', trans('blog/message.success.create'));
+        if($event->save()) {
+            $event->attachChannels($request->channels);
+            return redirect('admin/event')->with('success', trans('Event Successfully Added'));
         } else {
-            return Redirect::route('admin/channel')->withInput()->with('error', trans('blog/message.error.create'));
+            return Redirect::route('admin/event')->withInput()->with('error', trans('blog/message.error.create'));
         }
     }
 
@@ -79,9 +88,9 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Event $event)
     {
-        //
+         return view('admin.events.show', compact('event'));
     }
 
     /**
@@ -90,9 +99,23 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Event $event)
     {
-        //
+        $eventTypes = [
+            'footbat' =>'Footbal', 
+            'cricket' =>'Cricket'
+        ];
+        $eventStatus = [
+            'live' => 'Live',
+            'upcoming' => 'Upcoming',
+            'postponed' => "Postponed"
+        ];
+        $channels = Channel::all();
+        $selectedChannels = [];
+        foreach($event->channels as $ch){
+            $selectedChannels[] = $ch->id; 
+        }
+        return view('admin.events.edit', compact('channels', 'eventTypes', 'eventStatus', 'event','selectedChannels'));
     }
 
     /**
@@ -102,9 +125,27 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Event $event)
     {
-        //
+         $this->Validate($request,[
+            'title' => 'required|min:5',
+            'dates' => 'required',
+            'channels' => 'required',
+            'event_type' => 'required',
+            'event_status' => 'required',
+        ]);
+        $dates = explode('-', $request->dates);
+        $event->title = $request->title;
+        $event->event_type= $request->event_type;
+        $event->event_status= $request->event_status;
+        $event->time_from = Carbon::parse(trim($dates[0]))->toDateTimeString();
+        $event->time_to = Carbon::parse(trim($dates[1]))->toDateTimeString();
+        if($event->save()) {
+            $event->updateChannels($request->channels, $event);
+            return redirect('admin/event')->with('success', trans('Event Successfully Updated'));
+        } else {
+            return Redirect::route('admin/event')->withInput()->with('error', trans('general.error.wrong'));
+        }
     }
 
     /**
@@ -113,8 +154,16 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( Event $event)
     {
         //
+         try {
+            $event->detachAllChannels();
+            $event->delete();
+            return Redirect::route('admin.event.index')->with('success', trans('Event was successfully deleted.'));
+        } catch (GroupNotFoundException $e) {
+            // Redirect to the group management page
+            return Redirect::route('admin.event.index')->with('error', trans('general.error.wrong'));
+        }
     }
 }

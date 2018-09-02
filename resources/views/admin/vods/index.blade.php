@@ -22,8 +22,8 @@
                 @lang('general.dashboard')
             </a>
         </li>
-        <li><a href="#">@lang('blog/title.blog')</a></li>
-        <li class="active">@lang('blog/title.bloglist')</li>
+        <li><a href="#">Vods</a></li>
+        <li class="active">Vod List</li>
     </ol>
 </section>
 
@@ -34,7 +34,7 @@
         <div class="card panel-primary ">
             <div class="card-heading clearfix">
                 <h4 class="card-title float-left"> <i class="livicon" data-name="users" data-size="16" data-loop="true" data-c="#fff" data-hc="white"></i>
-                    @lang('blog/title.bloglist')
+                   Vods
                 </h4>
                 <div class="float-right">
                     <a href="{{ URL::to('admin/vod/create') }}" class="btn btn-sm btn-default"><span class="fa fa-plus"></span> @lang('button.create')</a>
@@ -48,7 +48,9 @@
                         <tr class="filters">
                             <th>@lang('blog/table.id')</th>
                             <th>@lang('blog/table.title')</th>
-                            <th>@lang('blog/table.comments')</th>
+                            <th>link</th>
+                            <th>Year</th>
+                            <th>Category</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
                         </tr>
@@ -59,7 +61,9 @@
                             <tr>
                                 <td>{{ $vod->id }}</td>
                                 <td>{{ $vod->title }}</td>
-                                <td>""</td>
+                                <td>{{ $vod->link }}</td>
+                                <td>{{ $vod->year }}</td>
+                                <td>{{ $vod->category->title }}</td>
                                 <td>{{ $vod->created_at->diffForHumans() }}</td>
                                 <td>
                                     <a href="{{ URL::to('admin/vod/' . $vod->id ) }}"><i class="livicon"
@@ -68,19 +72,19 @@
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
-                                                                                                     title="@lang('blog/table.view-blog-comment')"></i></a>
+                                                                                                     title="View Vod"></i></a>
                                     <a href="{{ URL::to('admin/vod/' . $vod->id . '/edit' ) }}"><i class="livicon"
                                                                                                      data-name="edit"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
-                                                                                                     title="@lang('blog/table.update-blog')"></i></a>
+                                                                                                     title="Edit Vod"></i></a>
                                     <a href="{{ route('admin.blog.confirm-delete', $vod->id) }}" data-toggle="modal" data-id="{{$vod->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"
-                                                                        title="@lang('blog/table.delete-blog')"></i></a>
+                                                                        title="Delete"></i></a>
                                 </td>
                             </tr>
                         @endforeach

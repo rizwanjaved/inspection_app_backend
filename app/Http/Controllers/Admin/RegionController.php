@@ -9,6 +9,7 @@ use App\Http\Requests\GroupRequest;
 use Redirect;
 use Sentinel;
 use View;
+use Validator;
 
 class RegionController extends Controller
 {
@@ -41,16 +42,18 @@ class RegionController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|unique:regions',
+        ]);
         $region = new Region([
             'name' => $request->get('name'),
             'slug' => str_slug($request->get('name'))
         ]);
          if ($region->save()) {
-            return Redirect::route('admin.regions.index')->with('success', trans('groups/message.success.create'));
+            return Redirect::route('admin.region.index')->with('success', trans('Channel Region was successfully created.'));
         }
-
         // Redirect to the group create page
-        return Redirect::route('admin.regions.create')->withInput()->with('error', trans('groups/message.error.create'));
+        return Redirect::route('admin.region.create')->withInput()->with('error', trans('general.error.wrong'));
     }
 
     /**
@@ -70,9 +73,9 @@ class RegionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Region $region)
     {
-        //
+        return view('admin.regions.edit', compact('region'));
     }
 
     /**
@@ -82,9 +85,19 @@ class RegionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Region $region)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:categories',
+        ]);
+        $region->name = $request->get('name');
+        if ($region->save()) {
+            // Redirect to the group page
+            return Redirect::route('admin.region.index')->with('success', trans('Channel Region was successfully updated.'));
+        } else {
+            // Redirect to the group page
+            return Redirect::route('admin.region.edit', $group)->with('error', trans('general.error.wrong'));
+        }
     }
 
     /**
@@ -93,8 +106,14 @@ class RegionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Region $region)
     {
-        //
+        try {
+            $region->delete();
+            return Redirect::route('admin.region.index')->with('success', trans('Channel Region was successfully deleted.'));
+        } catch (GroupNotFoundException $e) {
+            // Redirect to the group management page
+            return Redirect::route('admin.region.index')->with('error', trans('general.error.wrong'));
+        }
     }
 }

@@ -36,9 +36,9 @@
             </a>
         </li>
         <li>
-            <a href="#">@lang('blog/title.blog')</a>
+            <a href="#">Vods</a>
         </li>
-        <li class="active">@lang('blog/title.add-blog')</li>
+        <li class="active">Vod Create</li>
     </ol>
 </section>
 <!--section ends-->
@@ -53,7 +53,7 @@
                  <div class="row">
                     <div class="col-sm-8">
                         <div class="form-group {{ $errors->first('title', 'has-error') }}">
-                            {!! Form::label('title', 'title') !!}
+                            {!! Form::label('title', 'Title') !!}
                             {!! Form::text('title', null, array('class' => 'form-control input-lg','placeholder'=> trans('blog/form.ph-title'))) !!}
                             <span class="help-block">{{ $errors->first('title', ':message') }}</span>
                         </div>
@@ -69,7 +69,7 @@
                                       <span class="input-group-text"> <i class="livicon" data-name="laptop" data-size="16" data-c="#555555"
                                        data-hc="#555555" data-loop="true"></i></span>
                                 </div>
-                                <input type="text" class="form-control" id="rangepicker4"/>
+                                <input type="text" class="form-control" id="rangepicker4" name="year"/>
                             </div>
                             <!-- /.input group -->
                         </div>
@@ -79,9 +79,8 @@
                     <div class="col-sm-4">
                         <div class="form-group {{ $errors->first('blog_category_id', 'has-error') }}">
                             <label for="blog_category" class="">Blog Category</label>
-                            {!! Form::label('blog_category_id', trans('blog/form.ll-postcategory')) !!}
                             {!! Form::select('category_id',$categories ,null, array('class' => 'form-control select2', 'id'=>'blog_category' ,'placeholder'=>trans('blog/form.select-category'))) !!}
-                            <span class="help-block">{{ $errors->first('blog_category_id', ':message') }}</span>
+                            <span class="help-block text-danger">{{ $errors->first('category_id', ':message') }}</span>
                         </div>
                         <label>@lang('blog/form.lb-featured-img')</label>
                         <div class="form-group">
@@ -101,15 +100,17 @@
                                             </span>
                                     <span class="btn btn-primary fileinput-exists" data-dismiss="fileinput">Remove</span>
                                 </div>
+                                <span class="help-block text-danger">{{ $errors->first('image', ':message') }}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">@lang('blog/form.publish')</button>
-                            <a href="{!! URL::to('admin/channel/create') !!}"
+                            <a href="{!! URL::to('admin/vod') !!}"
                                class="btn btn-danger">@lang('blog/form.discard')</a>
                         </div>
                     </div>
-                    <!-- /.col-sm-4 --> </div>
+                    <!-- /.col-sm-4 --> 
+                </div>
                 {!! Form::close() !!}
         </div>
         </div>

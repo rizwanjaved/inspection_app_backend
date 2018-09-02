@@ -26,7 +26,7 @@
     </li>
     <!-- my dropddowns -->
     <!-- categories -->
-    <li {!! (Request::is('admin/category') || Request::is('admin/category/create')  ? 'class="active"' : '') !!}>
+    <li {!! (Request::is('admin/category') || Request::is('admin/category/create') || Request::is('admin/category/*/edit')  ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="medal" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
                data-loop="true"></i>
@@ -48,7 +48,7 @@
             </li>
         </ul>
     </li>
-    <li {!! (Request::is('admin/region') || Request::is('admin/region/create')  ? 'class="active"' : '') !!}>
+    <li {!! (Request::is('admin/region') || Request::is('admin/region/create') || Request::is('admin/region/*/edit')  ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="medal" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
                data-loop="true"></i>
@@ -70,7 +70,7 @@
             </li>
         </ul>
     </li>
-     <li {!! (Request::is('admin/channel') || Request::is('admin/channel/create')  ? 'class="active"' : '') !!}>
+     <li {!! (Request::is('admin/channel') || Request::is('admin/channel/create') || Request::is('admin/channel/*')  || Request::is('admin/channel/*/edit') ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="medal" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
                data-loop="true"></i>
@@ -92,7 +92,7 @@
             </li>
         </ul>
     </li>
-    <li {!! (Request::is('admin/event') || Request::is('admin/event/create')  ? 'class="active"' : '') !!}>
+    <li {!! (Request::is('admin/event') || Request::is('admin/event/create') || Request::is('admin/event/*') || Request::is('admin/event/*/edit')  ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="medal" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
                data-loop="true"></i>
@@ -100,21 +100,21 @@
             <span class="fa arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li {!! (Request::is('admin/channel') ? 'class="active"' : '') !!}>
-                <a href="{{ URL::to('admin/channel') }}">
+            <li {!! (Request::is('admin/event') ? 'class="active"' : '') !!}>
+                <a href="{{ URL::to('admin/event') }}">
                     <i class="fa fa-angle-double-right"></i>
                     Events
                 </a>
             </li>
-             <li {!! (Request::is('admin/channel/create') ? 'class="active"' : '') !!}>
-                <a href="{{ URL::to('admin/channel/create') }}">
+             <li {!! (Request::is('admin/event/create') ? 'class="active"' : '') !!}>
+                <a href="{{ URL::to('admin/event/create') }}">
                     <i class="fa fa-angle-double-right"></i>
                     Add New Events
                 </a>
             </li>
         </ul>
     </li>
-      <li {!! (Request::is('admin/vod') || Request::is('admin/vod/create')  ? 'class="active"' : '') !!}>
+      <li {!! (Request::is('admin/vod') || Request::is('admin/vod/create') || Request::is('admin/vod/*') || Request::is('admin/vod/*/*') || Request::is('admin/vodc') || Request::is('admin/vodc/*/*') || Request::is('admin/vodc/*')  ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="medal" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
                data-loop="true"></i>
@@ -122,13 +122,13 @@
             <span class="fa arrow"></span>
         </a>
         <ul class="sub-menu">
-            <li {!! (Request::is('admin/vodc') ? 'class="active"' : '') !!}>
+            <li {!! (Request::is('admin/vodc') || Request::is('admin/vodc/*') || Request::is('admin/vodc/*/*') ? 'class="active"' : '') !!}>
                 <a href="{{ URL::to('admin/vodc') }}">
                     <i class="fa fa-angle-double-right"></i>
                     VOD Categories
                 </a>
             </li>
-            <li {!! (Request::is('admin/vod') ? 'class="active"' : '') !!}>
+            <li {!! (Request::is('admin/vod') || Request::is('admin/vod/*') || Request::is('admin/vod/*/*') ? 'class="active"' : '') !!}>
                 <a href="{{ URL::to('admin/vod') }}">
                     <i class="fa fa-angle-double-right"></i>
                     VODs

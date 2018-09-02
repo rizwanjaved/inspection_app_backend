@@ -53,6 +53,7 @@
                  <div class="row">
                     <div class="col-sm-8">
                         <div class="form-group {{ $errors->first('title', 'has-error') }}">
+                            {!! Form::label('title','Title') !!}
                             {!! Form::text('title', null, array('class' => 'form-control input-lg','placeholder'=> trans('blog/form.ph-title'))) !!}
                             <span class="help-block">{{ $errors->first('title', ':message') }}</span>
                         </div>
@@ -61,44 +62,43 @@
                             <label>
                                 Date and Time:
                             </label>
-                            <div class="input-group">
+                            <div class="input-group {{ $errors->first('dates', 'has-error') }}">
                                 <div class="input-group-append">
                                       <span class="input-group-text"> <i class="livicon" data-name="calender" data-size="16" data-c="#555555"
                                        data-hc="#555555" data-loop="true"></i></span>
                                 </div>
                                 <input type="text" class="form-control" id="daterange_custom" name="dates" />
                             </div>
+                            <span class="help-block">{{ $errors->first('dates', ':message') }}</span>
                         </div>
                         <!--  -->
-                         <div class="form-group">
-                        <label for="select22" class="control-label">
-                            Select2 multi select
-                        </label>
-                        <select id="select22" class="form-control select2" name ="channels[]" multiple>
-                            @foreach($channels as $channel)
-                            <option value="{{ $channel->id }}">{{$channel->title}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="form-group {{ $errors->first('channels', 'has-error') }}">
+                            <label for="select22" class="control-label">
+                                Channels
+                            </label>
+                            <select id="select22" class="form-control select2" name ="channels[]" multiple>
+                                @foreach($channels as $channel)
+                                <option value="{{ $channel->id }}">{{$channel->title}}</option>
+                                @endforeach
+                            </select>
+                            <span class="help-block">{{ $errors->first('channels', ':message') }}</span>
+                        </div>
                     </div>
                     <!-- /.col-sm-8 -->
                     <div class="col-sm-4">
-                        <div class="form-group {{ $errors->first('blog_category_id', 'has-error') }}">
+                        <div class="form-group {{ $errors->first('event_type', 'has-error') }}">
                             <label for="blog_category" class="">Event Type</label>
-                            {!! Form::label('blog_category_id', trans('blog/form.ll-postcategory')) !!}
                             {!! Form::select('event_type',$eventTypes ,null, array('class' => 'form-control select2', 'id'=>'blog_category' ,'placeholder'=>trans('blog/form.select-category'))) !!}
-                            <span class="help-block">{{ $errors->first('blog_category_id', ':message') }}</span>
+                            <span class="help-block">{{ $errors->first('event_type', ':message') }}</span>
                         </div>
-                         <div class="form-group {{ $errors->first('blog_category_id', 'has-error') }}">
+                         <div class="form-group {{ $errors->first('event_status', 'has-error') }}">
                             <label for="blog_category" class="">Event Status</label>
-                            {!! Form::label('blog_category_id', trans('blog/form.ll-postcategory')) !!}
                             {!! Form::select('event_status',$eventStatus ,null, array('class' => 'form-control select2', 'id'=>'blog_category' ,'placeholder'=>trans('blog/form.select-category'))) !!}
-                            <span class="help-block">{{ $errors->first('blog_category_id', ':message') }}</span>
+                            <span class="help-block">{{ $errors->first('event_status', ':message') }}</span>
                         </div>
-                        <label>@lang('blog/form.lb-featured-img')</label>
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">@lang('blog/form.publish')</button>
-                            <a href="{!! URL::to('admin/channel/create') !!}"
+                            <a href="{!! URL::to('admin/event') !!}"
                                class="btn btn-danger">@lang('blog/form.discard')</a>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
     $('body').on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');
     });
-    $("#daterange_custom").daterangepicker({
+   $("#daterange_custom").daterangepicker({
     timePicker: true,
     timePickerIncrement: 1,
     locale: {

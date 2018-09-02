@@ -8,13 +8,18 @@
 
 {{-- page level styles --}}
 @section('header_styles')
-    <link href="{{ asset('assets/vendors/summernote/css/summernote.css') }}" rel="stylesheet" type="text/css">
-
-    <link href="{{ asset('assets/vendors/summernote/css/summernote-bs4.css') }}" rel="stylesheet" type="text/css">
+     <link href="{{ asset('assets/vendors/summernote/css/summernote-bs4.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/vendors/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/vendors/bootstrap-tagsinput/css/bootstrap-tagsinput.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/jasny-bootstrap/css/jasny-bootstrap.css') }}">
     <link href="{{ asset('assets/css/pages/blog.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/jasny-bootstrap/css/jasny-bootstrap.css') }}">
+    <link href="{{ asset('assets/vendors/pickadate/css/default.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/vendors/pickadate/css/default.date.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/vendors/pickadate/css/default.time.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/vendors/airDatepicker/css/datepicker.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/vendors/flatpickr/css/flatpickr.min.css') }}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{{ asset('assets/css/pages/adv_date_pickers.css') }}" rel="stylesheet" type="text/css"/>
 
     <!--end of page level css-->
 @stop
@@ -24,7 +29,7 @@
 @section('content')
 <section class="content-header">
     <!--section starts-->
-    <h1>@lang('blog/title.edit')</h1>
+    <h1>Edit Vod</h1>
     <ol class="breadcrumb">
         <li>
             <a href="{{ route('admin.dashboard') }}"> <i class="livicon" data-name="home" data-size="14" data-c="#000" data-loop="true"></i>
@@ -32,9 +37,9 @@
             </a>
         </li>
         <li>
-            <a href="#">@lang('blog/title.blog')</a>
+            <a href="#">Vods</a>
         </li>
-        <li class="active">@lang('blog/title.edit')</li>
+        <li class="active">Edit Vods</li>
     </ol>
 </section>
 <!--section ends-->
@@ -43,46 +48,56 @@
     <div class="row">
         <div class="col-12">
         <div class="the-box no-border">
-           {!! Form::model($blog, ['url' => URL::to('admin/blog/' . $blog->id), 'method' => 'put', 'class' => 'bf', 'files'=> true]) !!}
+           {!! Form::model($vod, ['url' => URL::to('admin/vod/' . $vod->id), 'method' => 'put', 'class' => 'bf', 'files'=> true]) !!}
                 <div class="row">
                     <div class="col-sm-8">
                         <div class="form-group {{ $errors->first('title', 'has-error') }}">
-                            {!! Form::text('title', null, array('class' => 'form-control input-lg', 'placeholder'=>trans('blog/form.ph-title'))) !!}
+                            {!! Form::label('title', 'Title') !!}
+                            {!! Form::text('title', null, array('class' => 'form-control input-lg','placeholder'=> trans('blog/form.ph-title'))) !!}
                             <span class="help-block">{{ $errors->first('title', ':message') }}</span>
                         </div>
-                        <div class='box-body pad {{ $errors->first('content', 'has-error') }}'>
-                            {!! Form::textarea('content',null, array('class' => 'textarea form-control','rows'=>'5','placeholder'=>trans('blog/form.ph-content'), 'style'=>'style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"')) !!}
-                            <span class="help-block">{{ $errors->first('content', ':message') }}</span>
+                         <div class="form-group {{ $errors->first('title', 'has-error') }}">
+                            {!! Form::label('link', 'link') !!}
+                            {!! Form::text('link', null, array('class' => 'form-control input-lg','placeholder'=> trans('blog/form.ph-title'))) !!}
+                            <span class="help-block">{{ $errors->first('link', ':message') }}</span>
                         </div>
+                        <div class="form-group">
+                            <label>Year</label>
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                      <span class="input-group-text"> <i class="livicon" data-name="laptop" data-size="16" data-c="#555555"
+                                       data-hc="#555555" data-loop="true"></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="rangepicker4" name="year" value="{{$vod->year}}"/>
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+                       
                     </div>
                     <!-- /.col-sm-8 -->
                     <div class="col-sm-4">
-                        <div class="form-group {{ $errors->first('blog_category_id', 'has-error') }}">
-                            <label for="blog_category" class="">Blog Category</label>
-                            {!! Form::select('blog_category_id',$blogcategory ,null, array('class' => 'form-control select2','id'=>'blog_category', 'placeholder'=>trans('blog/form.select-category')))!!}
-                            <span class="help-block">{{ $errors->first('blog_category_id', ':message') }}</span>
-                        </div>
-                        <div class="form-group">
-                            {!! Form::text('tags', $blog->tagList, array('class' => 'form-control input-lg', 'data-role'=>"tagsinput", 'placeholder'=>trans('blog/form.tags')))!!}
+                        <div class="form-group {{ $errors->first('category_id', 'has-error') }}">
+                            {!! Form::label('category_id', 'Vod Category') !!}
+                            {!! Form::select('category_id',$categories ,$vod->category_id, array('class' => 'form-control select2', 'id'=>'blog_category' ,'placeholder'=>trans('blog/form.select-category'))) !!}
+                            <span class="help-block">{{ $errors->first('category_id', ':message') }}</span>
                         </div>
                         <label>@lang('blog/form.lb-featured-img')</label>
                         <div class="form-group">
 
+
                             <div class="fileinput fileinput-new" data-provides="fileinput">
                                 <div class="fileinput-new thumbnail" style="max-width: 200px; max-height: 200px;">
-                                    @if(!empty($blog->image))
-
-                                        <img src="{{URL::to('uploads/blog/'.$blog->image)}}" class="img-responsive" alt="Image">
+                                     @if(!empty($vod->image))
+                                        <img src="{{URL::to('uploads/vods/'.$vod->image)}}" class="img-responsive" alt="Image">
                                     @else
                                         <img src="{{ asset('assets/images/authors/no_avatar.jpg') }}" alt="..."
                                              class="img-responsive"/>
                                     @endif
-
                                 </div>
                                 <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
                                 <div>
                                             <span class="btn btn-primary btn-file">
-                                                   <span class="fileinput-new">Select image</span>
+                                                <span class="fileinput-new">Select image</span>
                                                 <span class="fileinput-exists">Change</span>
                                                 <input type="file" name="image" id="pic" accept="image/*" />
                                             </span>
@@ -91,12 +106,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success blog_submit">@lang('blog/form.update')</button>
-                            <a href="{{ URL::to('admin/blog') }}" class="btn btn-danger">@lang('blog/form.cancel')</a>
+                            <button type="submit" class="btn btn-success">@lang('blog/form.publish')</button>
+                            <a href="{!! URL::to('admin/vod') !!}"
+                               class="btn btn-danger">@lang('blog/form.discard')</a>
                         </div>
                     </div>
-                    <!-- /.col-sm-4 --> </div>
-        </div>
+                    <!-- /.col-sm-4 --> 
+                </div>
                 <!-- /.row -->
                 {!! Form::close() !!}
         </div>
@@ -106,11 +122,53 @@
 @stop
 {{-- page level scripts --}}
 @section('footer_scripts')
-    <script  src="{{ asset('assets/vendors/summernote/js/summernote.min.js') }}"  type="text/javascript"></script>
+    <script src="{{ asset('assets/vendors/summernote/js/summernote-bs4.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/vendors/select2/js/select2.js') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/vendors/bootstrap-tagsinput/js/bootstrap-tagsinput.js') }}" type="text/javascript" ></script>
+<script type="text/javascript" src="{{ asset('assets/vendors/jasny-bootstrap/js/jasny-bootstrap.js') }}"></script>
+<script src="{{ asset('assets/js/pages/add_newblog.js') }}" type="text/javascript"></script>
 
-    <script  src="{{ asset('assets/vendors/summernote/js/summernote-bs4.min.js') }}"  type="text/javascript"></script>
-    <script src="{{ asset('assets/vendors/select2/js/select2.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/vendors/bootstrap-tagsinput/js/bootstrap-tagsinput.js') }}" type="text/javascript" ></script>
-    <script type="text/javascript" src="{{ asset('assets/vendors/jasny-bootstrap/js/jasny-bootstrap.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/pages/add_newblog.js') }}" ></script>
+
+<script src="{{ asset('assets/vendors/moment/js/moment.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/vendors/daterangepicker/js/daterangepicker.js') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/vendors/datetimepicker/js/bootstrap-datetimepicker.min.js') }}" type="text/javascript"></script>
+
+<script src="{{ asset('assets/vendors/clockface/js/clockface.js') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/vendors/jasny-bootstrap/js/jasny-bootstrap.js') }}" type="text/javascript"></script>
+
+<script src="{{ asset('assets/js/pages/datepicker.js') }}" type="text/javascript"></script>
+
+<script language="javascript" type="text/javascript"
+        src="{{ asset('assets/vendors/bootstrap-multiselect/js/bootstrap-multiselect.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('assets/vendors/select2/js/select2.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('assets/vendors/select2/js/select2.js') }}"></script>
+
+<script language="javascript" type="text/javascript" src="{{ asset('assets/vendors/sifter/sifter.js') }}"></script>
+<script language="javascript" type="text/javascript"
+        src="{{ asset('assets/vendors/microplugin/microplugin.js') }}"></script>
+<script language="javascript" type="text/javascript"
+        src="{{ asset('assets/vendors/selectize/js/selectize.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('assets/vendors/iCheck/js/icheck.js') }}"></script>
+<script language="javascript" type="text/javascript"
+        src="{{ asset('assets/vendors/bootstrap-switch/js/bootstrap-switch.js') }}"></script>
+<script language="javascript" type="text/javascript"
+        src="{{ asset('assets/vendors/switchery/js/switchery.js') }}"></script>
+<script language="javascript" type="text/javascript"
+        src="{{ asset('assets/vendors/bootstrap-maxlength/js/bootstrap-maxlength.js') }}"></script>
+<script language="javascript" type="text/javascript"
+        src="{{ asset('assets/vendors/card/js/jquery.card.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('assets/js/pages/custom_elements.js') }}"></script>
+
+    <script>
+      $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+    });
+     $("#daterange_custom").daterangepicker({
+    timePicker: true,
+    timePickerIncrement: 1,
+    locale: {
+        format: 'MM/DD/YYYY h:mm A'
+    }
+    </script>
 @stop
+

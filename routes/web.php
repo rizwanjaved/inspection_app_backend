@@ -191,16 +191,33 @@ Route::group(['prefix' => 'admin','namespace'=>'Admin', 'middleware' => 'admin',
     // live tv app admin routes
 
     Route::resource('category', 'CategoryController');
+    Route::group(['prefix' => 'category'], function () {
+        Route::get('{category}/delete', 'CategoryController@destroy')->name('category.delete');
+    });
+
     Route::resource('region', 'RegionController');
+        Route::group(['prefix' => 'region'], function () {
+        Route::get('{region}/delete', 'RegionController@destroy')->name('region.delete');
+    });
+
     Route::resource('channel', 'ChannelController');
+        Route::group(['prefix' => 'channel'], function () {
+        Route::get('{channel}/delete', 'ChannelController@destroy')->name('channel.delete');
+    });
+
     Route::resource('event', 'EventController');
+
+    Route::group(['prefix' => 'event'], function () {
+        Route::get('{event}/delete', 'EventController@destroy')->name('event.delete');
+    });
     // vod section 
     Route::resource('vod', 'VodController');
     Route::get('vodc', 'VodController@catIndex')->name('catIndex');
     Route::get('vodc/create', 'VodController@catCreate')->name('catCreate');
     Route::post('vodc/create', 'VodController@catStore')->name('catStore');
-    Route::post('vod/{task}/edit', 'VodController@catUpdate')->name('update');
-    Route::post('vod/{task}/delete', 'VodController@catDelete')->name('delete');
+    Route::get('vodc/{category}/edit', 'VodController@catEdit')->name('catUpdate');
+    Route::put('vodc/{category}/update', 'VodController@catUpdate')->name('catUpdate');
+    Route::get('vodc/{category}/delete', 'VodController@catDelete')->name('catDelete');
 
 });
 

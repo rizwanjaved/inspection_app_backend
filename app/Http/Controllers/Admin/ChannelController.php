@@ -13,6 +13,8 @@ use Response;
 use Sentinel;
 use Intervention\Image\Facades\Image;
 use DOMDocument;
+use Validator;
+use Redirect;
 
 
 class ChannelController extends Controller
@@ -50,8 +52,14 @@ class ChannelController extends Controller
      */
     public function store(Request $request)
     {
-        //
         // dd($request->all());
+        $this->Validate($request,[
+        'title' => 'required|min:3',
+        'links' => 'required',
+        'category_id' => 'required',
+        'region_id' => 'required',
+        'image' => 'required',
+        ]);
         $channel = new Channel($request->except('image','links'));
         $message=$request->get('content');
         $dom = new DomDocument();
@@ -69,7 +77,7 @@ class ChannelController extends Controller
                 $mimetype = $groups['mime'];
                 // Generating a random filename
                 $filename = uniqid();
-                $filepath = "uploads/blog/$filename.$mimetype";
+                $filepath = "uploads/channel/$filename.$mimetype";
                 // @see http://image.intervention.io/api/
                 $image = Image::make($src)
                     // resize if required
@@ -99,10 +107,10 @@ class ChannelController extends Controller
 
         
         if ($channel->id) {
-            $channel->AddlinksToChannel(explode(',',$request->links), $channel->id);
-            return redirect('admin/channel')->with('success', trans('blog/message.success.create'));
+            $channel->addlinksToChannel(explode(',',$request->links), $channel->id);
+            return redirect('admin/channel')->with('success', trans('Channel Successfully created'));
         } else {
-            return Redirect::route('admin/channel')->withInput()->with('error', trans('blog/message.error.create'));
+            return Redirect::route('admin/channel')->withInput()->with('error', trans('general.error.wrong'));
         }
     }
 
@@ -112,9 +120,9 @@ class ChannelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Channel $channel)
     {
-        //
+        return view('admin.channels.show', compact('channel'));
     }
 
     /**
@@ -123,9 +131,15 @@ class ChannelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Channel $channel)
     {
-        //
+        $links ="";
+        foreach($channel->links as $key => $value){
+           $links= $links.','.$value->url;
+        }
+        $categories = Category::pluck('name', 'id');
+        $regions = Region::pluck('name', 'id');
+        return view('admin.channels.edit', compact('channel', 'categories', 'regions', 'links'));
     }
 
     /**
@@ -135,9 +149,37 @@ class ChannelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Channel $channel)
     {
-        //
+          $this->Validate($request,[
+        'title' => 'required|min:3',
+        'links' => 'required',
+        'category_id' => 'required',
+        'region_id' => 'required',
+        ]);
+        $message=$request->get('content');
+        libxml_use_internal_errors(true);
+        $dom = new DomDocument();
+        $dom->loadHtml($message, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $channel->content = $dom->saveHTML();
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->extension()?: 'png';
+            $picture = str_random(10) . '.' . $extension;
+            $destinationPath = public_path() . '/uploads/channels/';
+            $file->move($destinationPath, $picture);
+            if(file_exists(public_path() . '/uploads/channels/'.$channel->image)) {
+                unlink(public_path('/uploads/channels/'.$channel->image));
+            }
+            $channel->image = $picture;
+        }
+
+        if ($channel->update($request->except('content','image','_method', 'links'))) {
+            $channel->updatelinks(explode(',',$request->links), $channel);
+            return redirect('admin/channel')->with('success', trans('Channel Successfully Updated'));
+        } else {
+            return Redirect::route('admin/channel')->withInput()->with('error', trans('general.error.wrong'));
+        }
     }
 
     /**
@@ -146,8 +188,17 @@ class ChannelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Channel $channel)
     {
-        //
+        if(file_exists(public_path() . '/uploads/channels/'.$channel->image)) {
+                unlink(public_path('/uploads/channels/'.$channel->image));
+        }
+        try {
+            $channel->delete();
+            return Redirect::route('admin.channel.index')->with('success', trans('Channel was successfully deleted.'));
+        } catch (GroupNotFoundException $e) {
+            // Redirect to the group management page
+            return Redirect::route('admin.channel.index')->with('error',trans('general.error.wrong'));
+        }
     }
 }

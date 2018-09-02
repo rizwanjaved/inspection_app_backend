@@ -29,7 +29,7 @@
             <div class="card panel-primary ">
                 <div class="card-heading clearfix">
                     <h4 class="card-title float-left"> <i class="livicon" data-name="users" data-size="16" data-loop="true" data-c="#fff" data-hc="white"></i>
-                        @lang('groups')
+                        Categories
                     </h4>
                     <div class="float-right">
                     <a href="{{ route('admin.category.create') }}" class="btn btn-sm btn-default"><span class="fa fa-plus"></span> @lang('button.create')</a>
@@ -57,20 +57,22 @@
                                     <td>{!! $category->name !!}</td>
                                     <td>{!! $category->created_at->diffForHumans() !!}</td>
                                     <td>
-                                        <a href="{{ route('admin.groups.edit', $category->id) }}">
-                                                <i class="livicon" data-name="edit" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="edit group"></i>
-                                            </a>
-                                            <!-- let's not delete 'Admin' group by accident -->
+                                        <a href="{{ route('admin.category.edit', $category->id) }}">
+                                            <i class="livicon" data-name="edit" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="Edit Category"></i>
+                                        </a>
+                                            @if($category->channels()->count())
                                                 <a href="#" data-toggle="modal" data-target="#users_exists" data-name="{!! $category->name !!}" class="users_exists">
                                                     <i class="livicon" data-name="warning-alt" data-size="18"
                                                         data-loop="true" data-c="#f56954" data-hc="#f56954"
-                                                        title="@lang('groups/form.users_exists')"></i>
+                                                        title="Channels Exists"></i>
                                                 </a>
-                                                <a href="{{ route('admin.groups.confirm-delete', $category->id) }}" data-toggle="modal" data-id ="{{ $category->id }}" data-target="#delete_confirm">
+                                            @else
+                                                <a href="{{ route('admin.category.destroy', $category->id) }}" data-toggle="modal" data-id ="{{ $category->id }}" data-target="#delete_confirm">
                                                     <i class="livicon" data-name="remove-alt" data-size="18"
                                                         data-loop="true" data-c="#f56954" data-hc="#f56954"
-                                                        title="@lang('groups/form.delete_group')"></i>
+                                                        title="Delete Category"></i>
                                                 </a>
+                                            @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -103,11 +105,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="myModalLabel">Channels Exists</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                @lang('groups/message.users_exists')
+                Category contains Channels, channel can not be deleted
             </div>
         </div>
     </div>
@@ -116,11 +118,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="deleteLabel">Delete Group</h4>
+                <h4 class="modal-title" id="deleteLabel">Delete Category</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                Are you sure to delete this Group? This operation is irreversible.
+                Are you sure to delete this Category? This operation is irreversible.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -145,7 +147,7 @@
         var button = $(event.relatedTarget)
         var $recipient = button.data('id');
         var modal = $(this)
-        modal.find('.modal-footer a').prop("href",$url_path+"/admin/groups/"+$recipient+"/delete");
+        modal.find('.modal-footer a').prop("href",$url_path+"/admin/category/"+$recipient+"/delete");
     })
 </script>
 @stop

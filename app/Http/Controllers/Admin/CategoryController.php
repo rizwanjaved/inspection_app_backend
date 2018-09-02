@@ -9,7 +9,7 @@ use App\Http\Requests\GroupRequest;
 use Redirect;
 use Sentinel;
 use View;
-
+use Validator;
 class CategoryController extends Controller
 {
     /**
@@ -44,16 +44,19 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|unique:categories',
+        ]);
         $category = new Category([
             'name' => $request->get('name'),
             'slug' => str_slug($request->get('name'))
         ]);
          if ($category->save()) {
-            return Redirect::route('admin.categories.index')->with('success', trans('groups/message.success.create'));
+            return Redirect::route('admin.category.index')->with('success', trans('Channel Category was successfully created.'));
         }
 
         // Redirect to the group create page
-        return Redirect::route('admin.categories.create')->withInput()->with('error', trans('groups/message.error.create'));
+        return Redirect::route('admin.category.create')->withInput()->with('error', trans('general.error.wrong'));
     }
 
     /**
@@ -73,9 +76,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -85,9 +88,19 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Category $category)
     {
-        //
+        //  $this->validate($request, [
+        //     'name' => 'required|unique:categories',
+        // ]);
+        $category->name = $request->get('name');
+        if ($category->save()) {
+            // Redirect to the group page
+            return Redirect::route('admin.category.index')->with('success', trans('Channel Category was successfully updated.'));
+        } else {
+            // Redirect to the group page
+            return Redirect::route('admin.category.edit', $group)->with('error', trans('general.error.wrong'));
+        }
     }
 
     /**
@@ -98,6 +111,13 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $category = Category::find($id);
+            $category->delete();
+            return Redirect::route('admin.category.index')->with('success', trans('Channel Category was successfully deleted.'));
+        } catch (GroupNotFoundException $e) {
+            // Redirect to the group management page
+            return Redirect::route('admin.category.index')->with('error', trans('general.error.wrong'));
+        }
     }
 }
