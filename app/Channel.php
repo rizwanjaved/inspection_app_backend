@@ -33,6 +33,7 @@ class Channel extends Model
     // }
 
     protected $guarded = ['id'];
+     protected $with=['links'];
 
     public function addlinksToChannel($links, $channeld) {
         foreach($links as $link){

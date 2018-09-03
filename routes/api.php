@@ -17,5 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 /********** livetvApp**********/
+// Route::group(['prefix' => '/','namespace'=>'Admin', 'middleware' => 'admin', 'as' => 'admin.'], function () {
+// });
 Route::get('/',  'ApiController@index');
-Route::get('get_all_categories',  'ApiController@index');
+Route::post('getAllCategories',  'ApiController@getAllCategories');
+Route::post('getAllRegions',  'ApiController@getAllCategories');
+Route::post('getAllChannels',  'ApiController@getAllCategories');
+Route::post('getAllEvents',  'ApiController@getAllEvents');
+Route::post('getAllVodCategories',  'ApiController@getAllVodCategories');
+Route::post('getAllVods',  'ApiController@getAllVods');

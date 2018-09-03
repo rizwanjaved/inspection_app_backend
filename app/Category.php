@@ -9,6 +9,8 @@ class Category extends Model
     //
       protected $guarded = ['id'];
       protected $fillable = ['name', 'slug'];
+      protected $with=['channels'];
+
 
   public function channels() {
     return $this->hasMany(Channel::class);

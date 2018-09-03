@@ -17,7 +17,13 @@ use Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
-use App\Categories;
+use App\Category;
+use App\Channel;
+use App\Region;
+use App\Event;
+use App\Link;
+use App\Vod;
+use App\VodCategory;
 
 class ApiController extends Controller
 {
@@ -29,11 +35,56 @@ class ApiController extends Controller
             'code'       => 200,
         ],200);
     }
-    public function getCategories() {
+    public function getAllCategories() {
         $categories = Category::all();
           return response()->json([
             'success'      => true,
             'categories' => $categories,
+            'message' => 'The Api is working',
+            'code'       => 200,
+        ],200);
+    }
+    public function getAllRegions() {
+        $categories = Region::all();
+          return response()->json([
+            'success'      => true,
+            'categories' => $categories,
+            'message' => 'The Api is working',
+            'code'       => 200,
+        ],200);
+    }
+    public function getAllChannels() {
+        $categories = Channel::all();
+          return response()->json([
+            'success'      => true,
+            'categories' => $categories,
+            'message' => 'The Api is working',
+            'code'       => 200,
+        ],200);
+    }
+    public function getAllEvents(){
+      $events = Event::all();
+          return response()->json([
+            'success'      => true,
+            'events' => $events,
+            'message' => 'The Api is working',
+            'code'       => 200,
+        ],200);
+    }      
+    public function getAllVodCategories(){
+       $vodCategories = VodCategory::all();
+          return response()->json([
+            'success'      => true,
+            'vodCategories' => $vodCategories,
+            'message' => 'The Api is working',
+            'code'       => 200,
+        ],200);
+    }  
+    public function getAllVods(){
+        $vods = Vod::all();
+          return response()->json([
+            'success'      => true,
+            'vods' => $vods,
             'message' => 'The Api is working',
             'code'       => 200,
         ],200);
