@@ -64,7 +64,7 @@
                                                                     <tr>
                                                                         <td align="center" width="200" valign="middle" style="border-collapse:collapse!important;border-radius:35px;padding:20px 25px" bgcolor="#6791de">
                                                                                         <h1 style="text-center">{!! $user['activationCode'] !!}</h3>
-                                                                            <!-- <a href="{!! $user['activationUrl'] !!}" style="color:#fff!important;text-decoration:none;display:block;font-size:23px;font-style:italic" target="_blank" >Activate</a> -->
+                                                                            <!-- <a href="" style="color:#fff!important;text-decoration:none;display:block;font-size:23px;font-style:italic" target="_blank" >Activate</a> -->
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>

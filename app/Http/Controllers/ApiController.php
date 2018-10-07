@@ -206,7 +206,7 @@ class ApiController extends Controller
                 ->update(['code' => $key]);
              $data=[
                     'user_name' => $user->first_name .' '. $user->last_name,
-                    'activationUrl' => URL::route('activate', [$user->id, Activation::create($user)->code]),
+                    // 'activationUrl' => URL::route('activate', [$user->id, Activation::create($user)->code]),
                     'activationCode' => $key,
                     ];
                     // Send the activation code through email
