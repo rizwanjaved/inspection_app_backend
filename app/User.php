@@ -2,8 +2,13 @@
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentTaggable\Taggable;
+use Laravel\Passport\HasApiTokens;
+// use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Authenticatable;
 
-class User extends EloquentUser
+
+
+class User extends EloquentUser//Authenticatable
 {
     /**
 	 * The database table used by the model.
@@ -20,7 +25,9 @@ class User extends EloquentUser
 	 *
 	 * @var array
 	 */
-    use Taggable;
+    use HasApiTokens;
+	use Taggable;
+	Use Authenticatable;
 
 	protected $fillable = [];
 	protected $guarded = ['id'];

@@ -156,7 +156,7 @@ return [
 
         'expires' => 259200,
 
-        'lottery' => [2, 100],
+        'lottery' => [2, 6],
 
     ],
 

@@ -14,15 +14,23 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    return auth()->user();
 });
 /********** livetvApp**********/
 // Route::group(['prefix' => '/','namespace'=>'Admin', 'middleware' => 'admin', 'as' => 'admin.'], function () {
 // });
 Route::get('/',  'ApiController@index');
-Route::post('getAllCategories',  'ApiController@getAllCategories');
+Route::middleware('auth:api')->post('getAllCategories',  'ApiController@getAllCategories');
 Route::post('getAllRegions',  'ApiController@getAllCategories');
 Route::post('getAllChannels',  'ApiController@getAllCategories');
 Route::post('getAllEvents',  'ApiController@getAllEvents');
 Route::post('getAllVodCategories',  'ApiController@getAllVodCategories');
 Route::post('getAllVods',  'ApiController@getAllVods');
+
+Route::post('login',  'ApiController@login');
+Route::post('register',  'ApiController@register');
+
+Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
+   Route::post('activation',  'ApiController@userActivation');
+    Route::post('getAllCategories',  'ApiController@getAllCategories');
+});

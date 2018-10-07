@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Register extends Mailable
+class ActivationCode extends Mailable
 {
     use Queueable, SerializesModels;
     public $user;
@@ -30,6 +30,7 @@ class Register extends Mailable
     {
         return $this->from('example@example.com')
             ->subject('Activate Your Account')
-            ->markdown('emails.emailTemplates.activate');
+            ->markdown('emails.emailTemplates.activationCode');
+        // return $this->view('view.name');
     }
 }

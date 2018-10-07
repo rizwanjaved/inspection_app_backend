@@ -30,7 +30,7 @@
 
                             <tr>
                                 <td style="color:#141d23;font-family: 'Montserrat',Arial, sans-serif;font-size:22px;font-weight:600;letter-spacing:1px;line-height:30px;" data-bgcolor="Title" data-color="Title" data-size="Title" data-min="12" data-max="60" align="center">
-                                    {!! $user['user_name'] !!}
+                                    {!! $user->user_name !!}
                                 </td>
                             </tr>
                             <tr>
@@ -65,7 +65,7 @@
                                                                 <tbody>
                                                                 <tr>
                                                                     <td align="center" width="200" valign="middle" style="border-collapse:collapse!important;border-radius:35px;padding:20px 25px" bgcolor="#6791de">
-                                                                        <a href="{!! $user['forgotPasswordUrl'] !!}" style="color:#fff!important;text-decoration:none;display:block;font-size:23px;font-style:italic" target="_blank" >Change password</a>
+                                                                        <a href="{!! $user->forgotPasswordUrl !!}" style="color:#fff!important;text-decoration:none;display:block;font-size:23px;font-style:italic" target="_blank" >Change password</a>
                                                                     </td>
                                                                 </tr>
                                                                 </tbody>
