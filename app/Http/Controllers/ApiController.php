@@ -302,7 +302,7 @@ class ApiController extends Controller
         return response()->json([
             'success' => true,
             'user' => $user,
-            'profiless' => $user->profiles,
+            'profiles' => $user->profiles,
             'message' => 'all profiles'
         ], 200); 
     } 

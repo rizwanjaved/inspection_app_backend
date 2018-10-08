@@ -32,7 +32,7 @@
 <header class="header">
     <a href="{{ route('admin.dashboard') }}" class="logo">
         <!-- <img src="{{ asset('assets/img/logo.png') }}" alt="logo"> -->
-        <h1>LiveTvApp</h1>
+        <h1>PC</h1>
     </a>
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
