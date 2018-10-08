@@ -5,6 +5,7 @@ use Cviebrock\EloquentTaggable\Taggable;
 use Laravel\Passport\HasApiTokens;
 // use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Authenticatable;
+use App\Profile;
 
 
 
@@ -44,6 +45,7 @@ class User extends EloquentUser//Authenticatable
 	use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    protected $with = ['profiles'];
 
     protected $appends = ['full_name'];
     public function getFullNameAttribute()
@@ -52,6 +54,9 @@ class User extends EloquentUser//Authenticatable
     }
     public function country() {
         return $this->belongsTo( Country::class );
+	}
+	public function profiles() {
+        return $this->hasMany(Profile::class, 'parent_id');
     }
 
 }

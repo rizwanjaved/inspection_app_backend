@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use App\User;
 use App\Route;
@@ -35,6 +36,8 @@ use URL;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
 use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
 use Cartalyst\Sentinel\Laravel\Facades\Activation;
+use Intervention\Image\Facades\Image;
+
 
 
 use\App\Http\Controllers\JoshController;
@@ -47,6 +50,7 @@ use App\Mail\ForgotPassword;
 use App\Mail\Register;
 use App\Mail\ActivationCode;
 
+use App\Profile;
 
 
 class ApiController extends Controller
@@ -256,11 +260,53 @@ class ApiController extends Controller
         }
     } 
     /**************************************** */
-    public function details() 
+    public function addChildProfile(Request $request) 
     { 
-        $user = Auth::user(); 
-        return response()->json(['success' => $user], 200); 
+        $user = Auth::user();
+        $validator = Validator::make($request->all(), [ 
+            'name' => 'required|unique:profiles', 
+            'age_group' => 'required', 
+            'image' => 'required|image', 
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $profile = new Profile($request->except('image'));
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->extension()?: 'png';
+            $picture = str_random(10) . '.' . $extension;
+            $destinationPath = public_path() . '/uploads/profiles/';
+            $file->move($destinationPath, $picture);
+            $profile->image = url('uploads/profiles/').'/'.$picture;
+        }
+        $profile->parent_id = $user->id;
+        if($profile->save()) {
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'profile' => $profile,
+                'message' => 'new profile is created'
+            ], 200); 
+        } else {
+            $this->requestNotCompleted();
+        }
     } 
+    public function getProfiles(Request $request) 
+    { 
+        $user = Auth::user();
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'profiless' => $user->profiles,
+            'message' => 'all profiles'
+        ], 200); 
+    } 
+    
     //*************************///// 
     public function random_key($size) {
 	$alpha_key = '';
@@ -275,6 +321,13 @@ class ApiController extends Controller
 		$key .= $keys[array_rand($keys)];
 	}
 	return $alpha_key . $key;
+    }
+    public function requestNotCompleted() {
+        return response()->json([
+            'success' => false,
+            'message' => 'unable to complete request',
+            'error'=> 'request not completed'
+        ], 401);   
     }
 
 }

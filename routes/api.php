@@ -31,6 +31,8 @@ Route::post('login',  'ApiController@login');
 Route::post('register',  'ApiController@register');
 
 Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
-   Route::post('activation',  'ApiController@userActivation');
+    Route::post('activation',  'ApiController@userActivation');
+    Route::post('addChildProfile', 'ApiController@addChildProfile');
+    Route::post('getProfiles',  'ApiController@getProfiles');
     Route::post('getAllCategories',  'ApiController@getAllCategories');
 });
