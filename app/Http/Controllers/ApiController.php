@@ -306,6 +306,37 @@ class ApiController extends Controller
             'message' => 'all profiles'
         ], 200); 
     } 
+    /************ */
+    public function forgotPassword(Request $request)
+    {   
+        $user = Auth::user();
+        $data = new stdClass();
+        $activation = Activation::completed($user);
+        if(!$user || !$activation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'user Not Found or not activated'
+            ], 401); 
+        }
+        try {
+            $reminder = Reminder::exists($user) ?: Reminder::create($user);
+            $data->user_name = $user->first_name .' ' .$user->last_name;
+            $data->forgotPasswordUrl = URL::route('forgot-password-confirm', [$user->id, $reminder->code, 'api']);
+            Mail::to($user->email)
+                ->send(new ForgotPassword($data));
+                return response()->json([
+                    'success' => true,
+                    'user' => $user,
+                    'message' => 'password rest email is sent'
+                ], 200); 
+        } catch (UserNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'user' => $user,
+                'message' => 'password rest email is not sent'
+            ], 401); 
+        }
+    }
     
     //*************************///// 
     public function random_key($size) {

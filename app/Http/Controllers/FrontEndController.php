@@ -298,7 +298,7 @@ class FrontEndController extends JoshController
      * @param  string $passwordResetCode
      * @return View
      */
-    public function getForgotPasswordConfirm(Request $request, $userId, $passwordResetCode = null)
+    public function getForgotPasswordConfirm(Request $request, $userId, $passwordResetCode = null, $type = null)
     {
         if (!$user = Sentinel::findById($userId)) {
             // Redirect to the forgot password page
@@ -309,7 +309,7 @@ class FrontEndController extends JoshController
         {
             if($passwordResetCode == $reminder->code)
             {
-                return view('forgotpwd-confirm', compact(['userId', 'passwordResetCode']));
+                return view('forgotpwd-confirm', compact(['userId', 'passwordResetCode', 'type']));
             }
             else{
                 return 'code does not match';
@@ -328,17 +328,27 @@ class FrontEndController extends JoshController
      * @param  string $passwordResetCode
      * @return Redirect
      */
-    public function postForgotPasswordConfirm(PasswordResetRequest $request, $userId, $passwordResetCode = null)
+    public function postForgotPasswordConfirm(PasswordResetRequest $request, $userId, $passwordResetCode = null, $type = null)
     {
-
         $user = Sentinel::findById($userId);
-        if (!$reminder = Reminder::complete($user, $passwordResetCode, $request->get('password'))) {
-            // Ooops.. something went wrong
-            return Redirect::route('login')->with('error', trans('auth/message.forgot-password-confirm.error'));
+        if($type && $type == 'api') {
+            if (!$reminder = Reminder::complete($user, $passwordResetCode, $request->get('password'))) {
+                $message =  trans('auth/message.forgot-password-confirm.error');
+                return Redirect::route('forgotPasswordConfirmed')
+                    ->with('error', trans('auth/message.forgot-password-confirm.error'));
+            }
+            $message =  trans('auth/message.forgot-password-confirm.success');
+            return Redirect::route('forgotPasswordConfirmed')
+                ->with('success', trans('auth/message.forgot-password-confirm.success'));
+        } else {
+            if (!$reminder = Reminder::complete($user, $passwordResetCode, $request->get('password'))) {
+                // Ooops.. something went wrong
+                return Redirect::route('login')->with('error', trans('auth/message.forgot-password-confirm.error'));
+            }
+    
+            // Password successfully reseted
+            return Redirect::route('login')->with('success', trans('auth/message.forgot-password-confirm.success'));
         }
-
-        // Password successfully reseted
-        return Redirect::route('login')->with('success', trans('auth/message.forgot-password-confirm.success'));
     }
 
     /**

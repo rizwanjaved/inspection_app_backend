@@ -34,5 +34,8 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
     Route::post('activation',  'ApiController@userActivation');
     Route::post('addChildProfile', 'ApiController@addChildProfile');
     Route::post('getProfiles',  'ApiController@getProfiles');
-    Route::post('getAllCategories',  'ApiController@getAllCategories');
+    Route::post('forgotPassword',  'ApiController@forgotPassword');
+
+    Route::get('forgot-password/{userId}/{passwordResetCode}', 'AuthController@getForgotPasswordConfirm')->name('api-forgot-password-confirm');
+    Route::post('forgot-password/{userId}/{passwordResetCode}', 'AuthController@getForgotPasswordConfirm');
 });

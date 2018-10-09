@@ -18,13 +18,14 @@
 <div class="container">
     <div class="row">
         <div class="box animation flipInX">
-            <img src="{{ asset('assets/images/josh-new.png') }}" alt="logo" class="img-responsive mar">
+            <h2>Parent Control</h2>
+            <!-- <img src="{{ asset('assets/images/josh-new.png') }}" alt="logo" class="img-responsive mar"> -->
             <h3 class="text-primary">Reset your Password</h3>
             <p>Enter your new password details</p>
             <div id="notific">
             @include('notifications')
             </div>
-            <form action="{{ route('forgot-password-confirm',compact(['userId','passwordResetCode'])) }}" class="omb_loginForm pwd_validation"  autocomplete="off" method="POST">
+            <form action="{{ route('forgot-password-confirm',compact(['userId','passwordResetCode', 'type'])) }}" class="omb_loginForm pwd_validation"  autocomplete="off" method="POST">
                 {!! Form::token() !!}
                 <label class="sr-only"> New Password</label>
                 <input type="password" class="form-control" name="password" placeholder="New Password">

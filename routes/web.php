@@ -22,6 +22,9 @@ Route::group(['prefix' => 'admin', 'namespace'=>'Admin'], function () {
     Route::get('500', function () {
         return view('admin/500');
     });
+    Route::get('forgotPasswordConfirmed', function () {
+        return view('forgotPasswordConfirmed');
+    })->name('forgotPasswordConfirmed');
     # Lock screen
     Route::get('{id}/lockscreen', 'UsersController@lockscreen')->name('lockscreen');
     Route::post('{id}/lockscreen', 'UsersController@postLockscreen')->name('lockscreen');
@@ -250,8 +253,8 @@ Route::get('google', 'Admin\GoogleAuthController@redirectToProvider');
 Route::get('google/callback', 'Admin\GoogleAuthController@handleProviderCallback');
 
 # Forgot Password Confirmation
-Route::post('forgot-password/{userId}/{passwordResetCode}', 'FrontEndController@postForgotPasswordConfirm');
-Route::get('forgot-password/{userId}/{passwordResetCode}', 'FrontEndController@getForgotPasswordConfirm')->name('forgot-password-confirm');
+Route::post('forgot-password/{userId}/{passwordResetCode}/{type}', 'FrontEndController@postForgotPasswordConfirm');
+Route::get('forgot-password/{userId}/{passwordResetCode}/{type}', 'FrontEndController@getForgotPasswordConfirm')->name('forgot-password-confirm');
 # My account display and update details
 Route::group(['middleware' => 'user'], function () {
     Route::put('my-account', 'FrontEndController@update');
