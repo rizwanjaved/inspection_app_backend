@@ -283,10 +283,15 @@ class ApiController extends Controller
     { 
         $user = Auth::user();
         $validator = Validator::make($request->all(), [ 
-            'name' => 'required|unique:profiles', 
+            'name' => 'required', 
             'age_group' => 'required', 
             'image' => 'required|image', 
         ]);
+        $validator->after(function($validator) use ($request){
+            if (!$this->validateChildProfile($request->name)) {
+                $validator->errors()->add('name', 'The profile name is already taken');
+            }
+        });
         if ($validator->fails()) { 
             return response()->json([
                 'success' => false,
@@ -355,6 +360,15 @@ class ApiController extends Controller
                 'message' => 'password rest email is not sent'
             ], 401); 
         }
+    }
+    /*********** **********/ 
+    public function validateChildProfile($name) {
+        $user = Auth::user();
+        $profiles = Profile::where([
+            ['parent_id','=' ,$user->id],
+            ['name','=',$name]
+        ])->get();
+        return (count($profiles)>0) ? false :true; 
     }
     
     //*************************///// 
