@@ -259,6 +259,25 @@ class ApiController extends Controller
             ], 401);          
         }
     } 
+    public function validateEmail(Request $request) {
+        $validator = Validator::make($request->all(), [ 
+            'email' => 'required|email|exists:users', 
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'email not exists',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $user = Sentinel::findByCredentials(['email' => $request->get('email')]);
+        return response()->json([
+          'success' => true,
+          'user' => $user,
+          'message' => 'email exists'
+      ], 200); 
+    } 
+
     /**************************************** */
     public function addChildProfile(Request $request) 
     { 
@@ -306,7 +325,7 @@ class ApiController extends Controller
             'message' => 'all profiles'
         ], 200); 
     } 
-    /************ */
+    /************ *************/
     public function forgotPassword(Request $request)
     {   
         $user = Auth::user();
