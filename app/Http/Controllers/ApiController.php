@@ -187,10 +187,15 @@ class ApiController extends Controller
         $validator = Validator::make($request->all(), [ 
             'first_name' => 'required', 
             'last_name' => 'required', 
-            'email' => 'required|email|unique:users', 
+            'email' => 'required|email', 
             'password' => 'required', 
             'confirm_password' => 'required|same:password', 
         ]);
+        $validator->after(function($validator) use ($request){
+            if ($this->validateUserEmail($request->email)) {
+                $validator->errors()->add('email', 'The email is already taken');
+            }
+        });
         if ($validator->fails()) { 
             return response()->json([
             'success' => false,
@@ -259,6 +264,7 @@ class ApiController extends Controller
             ], 401);          
         }
     } 
+    /*******************s */
     public function validateEmail(Request $request) {
         $validator = Validator::make($request->all(), [ 
             'email' => 'required|email|exists:users', 
@@ -369,6 +375,19 @@ class ApiController extends Controller
             ['name','=',$name]
         ])->get();
         return (count($profiles)>0) ? false :true; 
+    }
+    public function validateUserEmail($email) {
+        $user = Sentinel::findByCredentials(['email' => $email]);
+        if(!$user) {
+            return false;
+        }
+        $activation = Activation::completed($user);
+        if($activation) {
+            return true;
+        } else {
+            $user->forceDelete();
+            return false;
+        }
     }
     
     //*************************///// 
