@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Route::group(['prefix' => '/','namespace'=>'Admin', 'middleware' => 'admin', 'as' => 'admin.'], function () {
 // });
 Route::get('/',  'ApiController@index');
+Route::get('get_phpinfo',  function(){
+    echo phpInfo();
+});
 Route::middleware('auth:api')->post('getAllCategories',  'ApiController@getAllCategories');
 Route::post('getAllRegions',  'ApiController@getAllCategories');
 Route::post('getAllChannels',  'ApiController@getAllCategories');
@@ -37,5 +40,5 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
     Route::post('addChildProfile', 'ApiController@addChildProfile');
     Route::post('getProfiles',  'ApiController@getProfiles');
     Route::post('forgotPassword',  'ApiController@forgotPassword');
-    Route::post('forgotPassword',  'ApiController@forgotPassword');
+    Route::post('postGallery',  'ApiController@postGallery');
 });

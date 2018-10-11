@@ -367,6 +367,28 @@ class ApiController extends Controller
             ], 401); 
         }
     }
+    /**********/
+    public function postGallery(Request $request) {
+        $user = Auth::user();
+        $validator = Validator::make($request->all(), [ 
+            // 'image' => 'required_without:video|image', 
+            // 'video' => 'required_without:image|mimes:jpeg,bmp,png:video/avi,
+            //                                     video/x-flv,video/mp4,
+            //                                     video/mpeg,video/3gpp,
+            //                                     video/quicktime', 
+            'media' => 'required|mimes:jpeg,bmp,png,mp4,mov,ogg,qt,flv,3gp,avi|size:80000'
+            // 'media_type' => 'required|string'
+            // 'date_time' => 'required'
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        dd($request->video);
+    }
     /*********** **********/ 
     public function validateChildProfile($name) {
         $user = Auth::user();
