@@ -272,14 +272,16 @@ class ApiController extends Controller
         if ($validator->fails()) { 
             return response()->json([
                 'success' => false,
-                'message' => 'email not exists',
+                'message' => 'email not found',
                 'error'=>$validator->errors()
             ], 401);            
         }
         $user = Sentinel::findByCredentials(['email' => $request->get('email')]);
+        $accessToken=  $user->createToken('parentalControl')->accessToken; 
         return response()->json([
           'success' => true,
           'user' => $user,
+          'access_token' => $accessToken,
           'message' => 'email exists'
       ], 200); 
     } 
