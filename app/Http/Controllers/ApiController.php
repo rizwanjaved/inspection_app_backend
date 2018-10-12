@@ -32,6 +32,7 @@ use Mail;
 use Reminder;
 use Sentinel;
 use URL;
+use File;
 
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
 use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
@@ -51,6 +52,7 @@ use App\Mail\Register;
 use App\Mail\ActivationCode;
 
 use App\Profile;
+use App\Gallery;
 
 
 class ApiController extends Controller
@@ -376,9 +378,8 @@ class ApiController extends Controller
             //                                     video/x-flv,video/mp4,
             //                                     video/mpeg,video/3gpp,
             //                                     video/quicktime', 
-            'media' => 'required|mimes:jpeg,bmp,png,mp4,mov,ogg,qt,flv,3gp,avi|size:80000'
-            // 'media_type' => 'required|string'
-            // 'date_time' => 'required'
+            'media' => 'required|mimes:jpeg,bmp,png,mp4,mov,ogg,qt,flv,3gp,avi|max:20000',
+            'profile_id' => 'required|exists:profiles,id'
         ]);
         if ($validator->fails()) { 
             return response()->json([
@@ -387,7 +388,73 @@ class ApiController extends Controller
                 'error'=>$validator->errors()
             ], 401);            
         }
-        dd($request->video);
+        if ($request->hasFile('media')) {
+            $file = $request->file('media');
+            $extension = $file->extension() ? : "unknown";
+            $media = str_random(10) . '.' . $extension;
+            $mimeType = File::mimeType($file);
+            $mediaType = (explode('/', $mimeType))[0];
+            $destinationPath = public_path() . '/uploads/gallery/';
+            $file->move($destinationPath, $media);
+            $mediaUrl = url('uploads/gallery/').'/'.$media;
+        }
+        $gallery =  new Gallery;
+        $gallery->media = $mediaUrl;
+        $gallery->profile_id = $request->profile_id;
+        $gallery->type = $mediaType;
+        if($gallery->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => $mediaType.' is saved successfully'
+            ], 200); 
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'media not saved',
+                'error'=> "unable to save media"
+            ], 401);     
+        }
+    }
+    public function getGallery(Request $request) {
+        $user = Auth::user();
+        $validator = Validator::make($request->all(), [ 
+            'profile_id' => 'required|exists:profiles,id'
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $profile = Profile::find($request->profile_id);
+        dd($profile);
+        if ($request->hasFile('media')) {
+            $file = $request->file('media');
+            $extension = $file->extension() ? : "unknown";
+            $media = str_random(10) . '.' . $extension;
+            $mimeType = File::mimeType($file);
+            $mediaType = (explode('/', $mimeType))[0];
+            $destinationPath = public_path() . '/uploads/gallery/';
+            $file->move($destinationPath, $media);
+            $mediaUrl = url('uploads/gallery/').'/'.$media;
+        }
+        $gallery =  new Gallery;
+        $gallery->media = $mediaUrl;
+        $gallery->profile_id = $request->profile_id;
+        $gallery->type = $mediaType;
+        if($gallery->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => $mediaType.' is saved successfully'
+            ], 200); 
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'media not saved',
+                'error'=> "unable to save media"
+            ], 401);     
+        }
     }
     /*********** **********/ 
     public function validateChildProfile($name) {
