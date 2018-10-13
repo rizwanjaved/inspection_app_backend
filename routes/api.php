@@ -41,4 +41,5 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
     Route::post('getProfiles',  'ApiController@getProfiles');
     Route::post('forgotPassword',  'ApiController@forgotPassword');
     Route::post('postGallery',  'ApiController@postGallery');
+    Route::post('getGallery',  'ApiController@getGallery');
 });

@@ -380,7 +380,7 @@ class ApiController extends Controller
             //                                     video/x-flv,video/mp4,
             //                                     video/mpeg,video/3gpp,
             //                                     video/quicktime', 
-            'media' => 'required|mimes:jpeg,bmp,png,mp4,mov,ogg,qt,flv,3gp,avi|max:20000',
+            'media' => 'required|mimes:jpeg,bmp,png,mp4,mov,ogg,qt,flv,3gp,avi,mkv|max:20000',
             'profile_id' => 'required|exists:profiles,id'
         ]);
         if ($validator->fails()) { 
@@ -430,33 +430,13 @@ class ApiController extends Controller
             ], 401);            
         }
         $profile = Profile::find($request->profile_id);
-        dd($profile);
-        if ($request->hasFile('media')) {
-            $file = $request->file('media');
-            $extension = $file->extension() ? : "unknown";
-            $media = str_random(10) . '.' . $extension;
-            $mimeType = File::mimeType($file);
-            $mediaType = (explode('/', $mimeType))[0];
-            $destinationPath = public_path() . '/uploads/gallery/';
-            $file->move($destinationPath, $media);
-            $mediaUrl = url('uploads/gallery/').'/'.$media;
-        }
-        $gallery =  new Gallery;
-        $gallery->media = $mediaUrl;
-        $gallery->profile_id = $request->profile_id;
-        $gallery->type = $mediaType;
-        if($gallery->save()) {
-            return response()->json([
-                'success' => true,
-                'message' => $mediaType.' is saved successfully'
-            ], 200); 
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'media not saved',
-                'error'=> "unable to save media"
-            ], 401);     
-        }
+        $count = count($profile->galleryItems);
+        return response()->json([
+            'success'   => true,
+            'gallery'   => $profile->galleryItems,
+            'items'     => $count,
+            'message'   => $count.' gallery items found'
+        ], 200); 
     }
     /*********** **********/ 
     public function validateChildProfile($name) {
