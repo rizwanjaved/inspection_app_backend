@@ -30,6 +30,10 @@ class AdminSeeder extends DatabaseSeeder {
 			'name'  => 'User',
 			'slug'  => 'user',
 		]);
+		$userRole = Sentinel::getRoleRepository()->createModel()->create([
+			'name'  => 'Inspector',
+			'slug'  => 'inspector',
+		]);
 
 
 		$admin->roles()->attach($adminRole);

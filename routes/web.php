@@ -221,6 +221,9 @@ Route::group(['prefix' => 'admin','namespace'=>'Admin', 'middleware' => 'admin',
     Route::get('vodc/{category}/edit', 'VodController@catEdit')->name('catUpdate');
     Route::put('vodc/{category}/update', 'VodController@catUpdate')->name('catUpdate');
     Route::get('vodc/{category}/delete', 'VodController@catDelete')->name('catDelete');
+    
+    // cars section
+    Route::resource('cars', 'CarsController');
 
 });
 

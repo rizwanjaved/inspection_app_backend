@@ -34,13 +34,6 @@ require __DIR__.'/../vendor/autoload.php';
 | the responses back to the browser and delight our users.
 |
 */
-// const V1 = '330M';
-// const V2 = '100M';
-// const V3 = '128M';
-// ini_set('max_execution_time', 60000);
-// ini_set('memory_limit', V1);
-// ini_set('post_max_size', 350);
-// ini_set('upload_max_filesize', V3);
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 

@@ -78,6 +78,7 @@ class UsersController extends JoshController
     {
         // Get all the available groups
         $groups = Sentinel::getRoleRepository()->all();
+        // $groups = Sentinel::getRoleRepository()->where('id','<>','1')->get();
 
         $countries = $this->countries;
         // Show the page
