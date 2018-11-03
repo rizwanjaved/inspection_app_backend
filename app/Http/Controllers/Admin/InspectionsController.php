@@ -13,7 +13,6 @@ class InspectionsController extends Controller
     {
         $inspections = Inspection::all();
         // Show the page
-        dd($inspections);
         return view('admin.inspections.index', compact('inspections'));
     }
 

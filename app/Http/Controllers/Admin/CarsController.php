@@ -30,9 +30,10 @@ class CarsController extends Controller
     public function index()
     {
         $channels = Channel::all();
-        $cars = Car::all();
-        // Show the page
-        return view('admin.cars.index', compact('channels, cars'));
+        $cars = Car::select('cars.*','car_types.type')
+                    ->join('car_types', 'cars.car_type_id', '=', 'car_types.id')->get();
+        // dd(empty($cars));
+        return view('admin.cars.index', compact('cars'));
     }
 
     /**

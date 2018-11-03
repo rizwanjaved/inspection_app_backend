@@ -22,15 +22,15 @@
 {{-- Page content --}}
 @section('content')
 <section class="content-header">
-    <h1>Channels</h1>
+    <h1>Inspections </h1>
     <ol class="breadcrumb">
         <li>
             <a href="{{ route('admin.dashboard') }}"> <i class="livicon" data-name="home" data-size="16" data-color="#000"></i>
                 @lang('general.dashboard')
             </a>
         </li>
-        <li><a href="#">Cars</a></li>
-        <li class="active">Cars List</li>
+        <li><a href="#">Inspections </a></li>
+        <li class="active">Inspections List</li>
     </ol>
 </section>
 
@@ -41,10 +41,10 @@
         <div class="card panel-primary ">
             <div class="card-heading clearfix">
                 <h4 class="card-title float-left"> <i class="livicon" data-name="users" data-size="16" data-loop="true" data-c="#fff" data-hc="white"></i>
-                  Cars
+                  Inspections 
                 </h4>
                 <div class="float-right">
-                    <a href="{{ URL::to('admin/cars/create') }}" class="btn btn-sm btn-default"><span class="fa fa-plus"></span> @lang('button.create')</a>
+                    <!-- <a href="{{ URL::to('admin/cars/create') }}" class="btn btn-sm btn-default"><span class="fa fa-plus"></span> @lang('button.create')</a> -->
                 </div>
             </div>
             <br />
@@ -54,40 +54,40 @@
                     <thead>
                         <tr class="filters">
                             <th>@lang('blog/table.id')</th>
-                            <th>Car No</th>
-                            <th>Model</th>
-                            <th>Type</th>
-                            <th>Owner</th>
+                            <th>Result</th>
+                            <th>Location</th>
+                            <th>car model</th>
+                            <th>inspected By</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($cars))
-                        @foreach ($cars as $car)
+                    @if(!empty($inspections))
+                        @foreach ($inspections as $inspection)
                             <tr>
-                                <td>{{ $car->id }}</td>
-                                <td>{{ $car->car_no }}</td>
-                                <td>{{ $car->model }}</td>
-                                <td>{{ $car->type }}</td>
-                                <td>{{ $car->owner->first_name }}</td>
-                                <td>{{ $car->created_at->diffForHumans() }}</td>
+                                <td>{{ $inspection->id }}</td>
+                                <td>{{ $inspection->result }}</td>
+                                <td>{{ $inspection->location }}</td>
+                                <td>{{ $inspection->car->model }}</td>
+                                <td>{{ $inspection->inspectedBy->first_name }}</td>
+                                <td>{{ $inspection->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/channel/' . $car->id ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/channel/' . $inspection->id ) }}"><i class="livicon"
                                                                                                      data-name="info"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="View Channel"></i></a>
-                                    <a href="{{ URL::to('admin/channel/' . $car->id . '/edit' ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/channel/' . $inspection->id . '/edit' ) }}"><i class="livicon"
                                                                                                      data-name="edit"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="Update Channel"></i></a>
-                                    <a href="{{ route('admin.channel.destroy', $car->id) }}" data-toggle="modal" data-id="{{$car->id }}"
+                                    <a href="{{ route('admin.channel.destroy', $inspection->id) }}" data-toggle="modal" data-id="{{$inspection->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"

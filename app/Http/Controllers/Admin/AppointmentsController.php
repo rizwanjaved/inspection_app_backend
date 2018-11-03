@@ -17,7 +17,6 @@ class AppointmentsController extends Controller
     {
         $appointments = Appointment::all();
         // Show the page
-        dd($appointments);
         return view('admin.appointments.index', compact('appointments'));
     }
 
