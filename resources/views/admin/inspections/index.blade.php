@@ -14,7 +14,7 @@
     .label {
         white-space:unset !important;
         word-wrap: break-word !important;
-            word-break: break-all !important;
+        word-break: break-all !important;
     }
     </style>
 @stop

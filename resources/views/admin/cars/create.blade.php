@@ -27,7 +27,7 @@
 @section('content')
 <section class="content-header">
     <!--section starts-->
-    <h1>Add New Channel</h1>
+    <h1>Add New Cars</h1>
     <ol class="breadcrumb">
         <li>
             <a href="{{ route('admin.dashboard') }}"> <i class="livicon" data-name="home" data-size="14" data-c="#000" data-loop="true"></i>
@@ -35,9 +35,9 @@
             </a>
         </li>
         <li>
-            <a href="#">Channels</a>
+            <a href="#">Cars</a>
         </li>
-        <li class="active">Add New Channel</li>
+        <li class="active">Add New Car</li>
     </ol>
 </section>
 <!--section ends-->
