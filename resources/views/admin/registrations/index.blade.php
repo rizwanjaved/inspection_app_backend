@@ -22,15 +22,15 @@
 {{-- Page content --}}
 @section('content')
 <section class="content-header">
-    <h1>Appointments</h1>
+    <h1>Registrations</h1>
     <ol class="breadcrumb">
         <li>
             <a href="{{ route('admin.dashboard') }}"> <i class="livicon" data-name="home" data-size="16" data-color="#000"></i>
                 @lang('general.dashboard')
             </a>
         </li>
-        <li><a href="#">Appointments</a></li>
-        <li class="active">Appointments List</li>
+        <li><a href="#">Registrations</a></li>
+        <li class="active">Registrations List</li>
     </ol>
 </section>
 
@@ -41,7 +41,7 @@
         <div class="card panel-primary ">
             <div class="card-heading clearfix">
                 <h4 class="card-title float-left"> <i class="livicon" data-name="users" data-size="16" data-loop="true" data-c="#fff" data-hc="white"></i>
-                  Appointments
+                  Registrations
                 </h4>
                 <div class="float-right">
                     <!-- <a href="{{ URL::to('admin/cars/create') }}" class="btn btn-sm btn-default"><span class="fa fa-plus"></span> @lang('button.create')</a> -->
@@ -55,39 +55,39 @@
                         <tr class="filters">
                             <th>@lang('blog/table.id')</th>
                             <th>Car No</th>
-                            <th>submitted By</th>
-                            <th>description</th>
-                            <th>submitted on</th>
+                            <th>Registration Fee</th>
+                            <th>Late Fee</th>
+                            <th>Registration Date</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($appointments))
-                        @foreach ($appointments as $appointment)
+                    @if(!empty($registrations))
+                        @foreach ($registrations as $registration)
                             <tr>
-                                <td>{{ $appointment->id }}</td>
-                                <td>{{ $appointment->car->car_no }}</td>
-                                <td>{{ $appointment->submittedByUser->first_name }}</td>
-                                <td>{{ $appointment->description }}</td>
-                                <td>{{ $appointment->submitted_date }}</td>
-                                <td>{{ $appointment->created_at->diffForHumans() }}</td>
+                                <td>{{ $registration->id }}</td>
+                                <td>{{ $registration->car->car_no }}</td>
+                                <td>{{ $registration->registration_fee }}</td>
+                                <td>{{ $registration->late_fee }}</td>
+                                <td>{{ $registration->created_at }}</td>
+                                <td>{{ $registration->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/channel/' . $appointment->id ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/channel/' . $registration->id ) }}"><i class="livicon"
                                                                                                      data-name="info"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="View Channel"></i></a>
-                                    <a href="{{ URL::to('admin/channel/' . $appointment->id . '/edit' ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/channel/' . $registration->id . '/edit' ) }}"><i class="livicon"
                                                                                                      data-name="edit"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="Update Channel"></i></a>
-                                    <a href="{{ route('admin.channel.destroy', $appointment->id) }}" data-toggle="modal" data-id="{{$appointment->id }}"
+                                    <a href="{{ route('admin.channel.destroy', $registration->id) }}" data-toggle="modal" data-id="{{$registration->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"

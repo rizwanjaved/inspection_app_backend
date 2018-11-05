@@ -73,7 +73,7 @@
         <a href="#">
             <i class="livicon" data-name="user" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
                data-loop="true"></i>
-            <span class="title">inspections</span>
+            <span class="title">Inspections</span>
             <span class="fa arrow"></span>
         </a>
         <ul class="sub-menu">
@@ -90,7 +90,7 @@
         <a href="#">
             <i class="livicon" data-name="user" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
                data-loop="true"></i>
-            <span class="title">registrations</span>
+            <span class="title">Registrations</span>
             <span class="fa arrow"></span>
         </a>
         <ul class="sub-menu">

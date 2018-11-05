@@ -12,8 +12,7 @@ class RegistrationsController extends Controller
     {
         $registrations = Registration::all();
         // Show the page
-        dd($registrations);
-        return view('admin.inspections.index', compact('inspections'));
+        return view('admin.registrations.index', compact('registrations'));
     }
 
     /**
