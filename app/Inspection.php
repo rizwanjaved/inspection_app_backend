@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Inspection extends Model
 {
     //
+    protected $guarded = ['id'];  
+    
     public function inspectedBy() {
         return $this->belongsTo(User::class, 'inspected_by');
     }

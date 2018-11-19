@@ -26,6 +26,9 @@ use App\Link;
 use App\Vod;
 use App\VodCategory;
 
+use App\Appointment;
+use App\Inspection;
+
 use Redirect;
 use View;
 use Mail;
@@ -61,60 +64,6 @@ class ApiController extends Controller
     public function index(){
         return response()->json([
             'success'      => true,
-            'message' => 'The Api is working',
-            'code'       => 200,
-        ],200);
-    }
-    public function getAllCategories() {
-        $categories = Category::all();
-          return response()->json([
-            'success'      => true,
-            'categories' => $categories,
-            'message' => 'The Api is working',
-            'code'       => 200,
-        ],200);
-    }
-    public function getAllRegions() {
-        $categories = Region::all();
-          return response()->json([
-            'success'      => true,
-            'categories' => $categories,
-            'message' => 'The Api is working',
-            'code'       => 200,
-        ],200);
-    }
-    public function getAllChannels() {
-        $categories = Channel::all();
-          return response()->json([
-            'success'      => true,
-            'categories' => $categories,
-            'message' => 'The Api is working',
-            'code'       => 200,
-        ],200);
-    }
-    public function getAllEvents(){
-      $events = Event::all();
-          return response()->json([
-            'success'      => true,
-            'events' => $events,
-            'message' => 'The Api is working',
-            'code'       => 200,
-        ],200);
-    }      
-    public function getAllVodCategories(){
-       $vodCategories = VodCategory::all();
-          return response()->json([
-            'success'      => true,
-            'vodCategories' => $vodCategories,
-            'message' => 'The Api is working',
-            'code'       => 200,
-        ],200);
-    }  
-    public function getAllVods(){
-        $vods = Vod::all();
-          return response()->json([
-            'success'      => true,
-            'vods' => $vods,
             'message' => 'The Api is working',
             'code'       => 200,
         ],200);
@@ -160,6 +109,7 @@ class ApiController extends Controller
         try {
             if($user = Sentinel::authenticate($request->only(['email', 'password']), $request->get('remember-me', false))) { 
                 $accessToken = $user->createToken('parentalControl')->accessToken; 
+                $user->role = $user->getRoles()->pluck('name', 'id')->first();
                 return response()->json([
                     'success' => true,
                     'access_token' => $accessToken,
@@ -287,7 +237,63 @@ class ApiController extends Controller
           'message' => 'email exists'
       ], 200); 
     } 
-
+    // *************inspector********************//
+    public function getAllAppointments(Request $request) {
+        $user = Auth::user();
+        $appointments =  Appointment::with('car')->get();
+        return response()->json([
+                'success' => true,
+                'user' => $user,
+                'appointments' => $appointments,
+                'message' => 'new profile is created'
+            ], 200); 
+    }
+     public function getAppointmentDetails(Request $request) {
+        $validator = Validator::make($request->all(), [ 
+            'appointment_id' => 'required|exists:appointments,id', 
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $appointment =  Appointment::find($request->appointment_id)->with('car')->first();
+        return response()->json([
+                'success' => true,
+                'appointment' => $appointment,
+                'message' => 'new profile is created'
+            ], 200); 
+    }
+    public function postInspection(Request $request) {
+        $validator = Validator::make($request->all(), [ 
+            'appointment_id' => 'required|exists:appointments,id|unique:inspections,appointment_id', 
+             'result'    => 'required', 
+            'location'  => 'required', 
+            'details'   => 'required', 
+            'car_id'    => 'required', 
+            'inspected_by' => 'required', 
+            'inspection_date' => 'required|date', 
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $inspection = Inspection::create($request->all());
+        if($inspection) {
+            return response()->json([
+                    'success' => true,
+                    'inspection' => $inspection,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            $this->requestNotCompleted();
+        }
+    }
     /**************************************** */
     public function addChildProfile(Request $request) 
     { 

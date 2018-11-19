@@ -179,6 +179,8 @@ return [
         // \InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
         // \InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
         Spatie\Analytics\AnalyticsServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
+
     ],
 
     /*

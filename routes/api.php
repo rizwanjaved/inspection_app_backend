@@ -42,4 +42,10 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
     Route::post('forgotPassword',  'ApiController@forgotPassword');
     Route::post('postGallery',  'ApiController@postGallery');
     Route::post('getGallery',  'ApiController@getGallery');
+    // inspector api's
+    Route::post('getAllAppointments',  'ApiController@getAllAppointments');
+    Route::post('getAppointmentDetails',  'ApiController@getAppointmentDetails');
+    Route::post('postInspection',  'ApiController@postInspection');
+    
+
 });

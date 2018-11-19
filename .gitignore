@@ -16,3 +16,4 @@ _ide_helper_models.php
 public/assets/jtable_data/
 composer.lock
 composer.phar
+/.env
