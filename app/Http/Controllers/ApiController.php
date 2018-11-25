@@ -117,6 +117,8 @@ class ApiController extends Controller
                     'success' => true,
                     'access_token' => $accessToken,
                     'user' => $user,
+                    'user_role' => $user->role ,
+                    'user_car' => $user->car,
                     'message' => 'authenticated'
                 ], 200); 
             } else {
