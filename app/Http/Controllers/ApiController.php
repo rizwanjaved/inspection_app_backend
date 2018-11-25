@@ -28,6 +28,9 @@ use App\VodCategory;
 
 use App\Appointment;
 use App\Inspection;
+use App\Car;
+use App\Registration;
+use App\Contravention;
 
 use Redirect;
 use View;
@@ -294,6 +297,134 @@ class ApiController extends Controller
             $this->requestNotCompleted();
         }
     }
+    public function postAppointment(Request $request) {
+        $validator = Validator::make($request->all(), [ 
+            'car_id'    => 'required', 
+            'submitted_by'  => 'required|unique:appointments,submitted_by', 
+            'description'   => 'required', 
+            'submitted_date'    => 'required', 
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $appointment = Appointment::create($request->all());
+        if($appointment) {
+            return response()->json([
+                    'success' => true,
+                    'Appointment' => $appointment,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            $this->requestNotCompleted();
+        }
+    }
+    // 
+    public function viewAppointment(Request $request) {
+        $user_id = Auth::user()->id;
+        $appointment =  Appointment::where('submitted_by', $user_id)->with('car')->first();
+        if($appointment) {
+            return response()->json([
+                    'success' => true,
+                    'appointment' => $appointment,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            $this->requestNotCompleted();
+        }
+    }
+     // 
+    public function cancelAppointment(Request $request) {
+        $user_id = Auth::user()->id;
+        $appointment =  Appointment::where('submitted_by', $user_id)->where('checked_by', null)->with('car')->first();
+        if($appointment && $appointment->delete()) {
+            return response()->json([
+                    'success' => true,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            return $this->requestNotCompleted();
+        }
+    }
+    // 
+     public function viewInspection(Request $request) {
+        $user = Auth::user();
+        $car_id = $user->car ? $user->car->id : null;
+        if($car_id == null) {
+            return $this->requestNotCompleted();
+        }
+        $inspection =  Inspection::where('car_id', $car_id)->with('car')->first();
+        if($inspection) {
+            return response()->json([
+                    'success' => true,
+                    'inspection' => $inspection,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            return $this->requestNotCompleted();
+        }
+    }
+    public function registration(Request $request) {
+        $validator = Validator::make($request->all(), [ 
+            'car_id'    => 'required|unique:registrations,car_id', 
+            'late_fee'  => 'required', 
+            'registration_fee'   => 'required', 
+        ]);
+        $validator->after(function($validator) use ($request){
+            $car = Car::find($request->car_id);
+            $reg_fee =  $car->type->registration_fee;
+            $late_fee =  $car->type->late_fee;
+            if ($request->registration_fee < $reg_fee) {
+                $validator->errors()->add('registration_fee', 'The Registration fee must not less then '.$reg_fee);
+            }
+            if ($request->late_fee < $late_fee) {
+                $validator->errors()->add('late_fee', 'The Late fee must not less then '.$late_fee);
+            }
+        });
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $registration = registration::create($request->all());
+        if($registration) {
+            return response()->json([
+                    'success' => true,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            $this->requestNotCompleted();
+        }
+    }
+    public function contravention(Request $request) {
+        $validator = Validator::make($request->all(), [ 
+            'car_id'    => 'required', 
+            'fee'  => 'required', 
+            'description'  => 'required', 
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $contravention = contravention::create($request->all());
+        if($contravention) {
+            return response()->json([
+                    'success' => true,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            $this->requestNotCompleted();
+        }
+    }
+    
     /**************************************** */
     public function addChildProfile(Request $request) 
     { 

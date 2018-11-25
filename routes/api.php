@@ -46,6 +46,12 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
     Route::post('getAllAppointments',  'ApiController@getAllAppointments');
     Route::post('getAppointmentDetails',  'ApiController@getAppointmentDetails');
     Route::post('postInspection',  'ApiController@postInspection');
-    
+    // appointment details 
+    Route::post('postAppointment',  'ApiController@postAppointment');
+    Route::post('viewAppointment',  'ApiController@viewAppointment');
+    Route::post('cancelAppointment',  'ApiController@cancelAppointment');
+    Route::post('viewInspection',  'ApiController@viewInspection');
+    Route::post('registration',  'ApiController@registration');
+    Route::post('contravention',  'ApiController@contravention');
 
 });

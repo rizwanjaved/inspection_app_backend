@@ -58,5 +58,9 @@ class User extends EloquentUser//Authenticatable
 	public function profiles() {
         return $this->hasMany(Profile::class, 'parent_id');
 	}
+	public function car() {
+        return $this->hasOne(Car::class, 'owner_id');
+	}
+	
 
 }
