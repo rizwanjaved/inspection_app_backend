@@ -242,6 +242,5 @@ return [
         'Flash' => Laracasts\Flash\Flash::class,
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
         'Analytics' => Spatie\Analytics\AnalyticsFacade::class,
-    ],
-
+    ]
 ];
