@@ -272,8 +272,9 @@ Route::post('contact', 'FrontEndController@postContact')->name('contact');
 
 #frontend views
 Route::get('/', ['as' => 'home', function () {
-    return view('index');
+    return redirect('/admin/');//view('index');
 }]);
+
 
 Route::get('blog','BlogController@index')->name('blog');
 Route::get('blog/{slug}/tag', 'BlogController@getBlogTag');
