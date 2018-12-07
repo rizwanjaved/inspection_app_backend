@@ -193,22 +193,6 @@ Josh Admin Template
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 col-lg-12 col-12">
-                    <div class="card panel-border map">
-
-                        <div class="card-heading">
-                            <h3 class="card-title">
-                                <i class="livicon" data-name="map" data-size="16" data-loop="true" data-c="#515763"
-                                   data-hc="#515763"></i>
-                                Users from countries
-                            </h3>
-
-                        </div>
-                        <div class="card-body nopadmar">
-                            {!! $geo->html() !!}
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="col-lg-4 col-md-12 col-sm-12 col-12 my-lg-0 my-3 my-md-3 my-sm-0">
@@ -254,37 +238,6 @@ Josh Admin Template
                 </div>
                 <div class="card-body nopadmar">
                     <div id="visitors_chart"></div>
-                </div>
-            </div>
-            <div class="card panel-border">
-                <div class="card-heading border-light">
-                    <h3 class="card-title">
-                        <i class="livicon" data-name="pen" data-size="16" data-color="#00bc8c" data-hc="#00bc8c"
-                           data-l="true"></i>
-                        Recent Blogs
-                    </h3>
-                </div>
-                <div class="card-body nopadmar blogs">
-                    @foreach($blogs as $blog )
-                    <div class="media">
-                        <div>
-                            @if($blog->author->pic)
-                            <img src="{!! url('/').'/uploads/users/'.$blog->author->pic !!}"
-                                 class="media-object rounded-circle">
-                            @else
-                            <img src="{{ asset('assets/images/authors/no_avatar.jpg') }}"
-                                 class="media-object rounded-circle">
-                            @endif
-                        </div>
-                        <div class="media-body ml-3">
-                            <h5 class="media-heading">{{ $blog->title }}</h5>
-
-                            <p>category:  {{ $blog->category->title }} <span
-                                    class="user_create_date float-right">by  {{ $blog->author->full_name }} </span></p>
-                        </div>
-                    </div>
-                    @endforeach
-
                 </div>
             </div>
         </div>

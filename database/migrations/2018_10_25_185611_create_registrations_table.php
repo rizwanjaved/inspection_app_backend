@@ -16,7 +16,6 @@ class CreateRegistrationsTable extends Migration
         Schema::create('registrations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('car_id');
-            $table->integer('late_fee');
             $table->integer('registration_fee');
             $table->timestamps();
         });

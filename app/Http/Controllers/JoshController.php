@@ -383,8 +383,8 @@ class JoshController extends Controller {
         //total users
         $user_count =User::count();
         //total Blogs
-        $blog_count =Blog::count();
-        $blogs = Blog::orderBy('id','desc')->take(5)->get()->load('category','author');
+        $blog_count =0;//Blog::count();
+        $blogs = '';//Blog::orderBy('id','desc')->take(5)->get()->load('category','author');
         $users = User::orderBy('id', 'desc')->take(5)->get();
 
         $chart_data = User::select(DB::raw( "COUNT(*) as count_row"))

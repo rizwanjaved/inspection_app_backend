@@ -23,12 +23,6 @@ Route::get('/',  'ApiController@index');
 Route::get('get_phpinfo',  function(){
     echo phpInfo();
 });
-Route::middleware('auth:api')->post('getAllCategories',  'ApiController@getAllCategories');
-Route::post('getAllRegions',  'ApiController@getAllCategories');
-Route::post('getAllChannels',  'ApiController@getAllCategories');
-Route::post('getAllEvents',  'ApiController@getAllEvents');
-Route::post('getAllVodCategories',  'ApiController@getAllVodCategories');
-Route::post('getAllVods',  'ApiController@getAllVods');
 
 Route::post('login',  'ApiController@login');
 Route::post('register',  'ApiController@register');
@@ -37,11 +31,6 @@ Route::post('validateEmail',  'ApiController@validateEmail');
 
 Route::group(['prefix' => '', 'middleware' => 'auth:api'], function () {
     Route::post('activation',  'ApiController@userActivation');
-    Route::post('addChildProfile', 'ApiController@addChildProfile');
-    Route::post('getProfiles',  'ApiController@getProfiles');
-    Route::post('forgotPassword',  'ApiController@forgotPassword');
-    Route::post('postGallery',  'ApiController@postGallery');
-    Route::post('getGallery',  'ApiController@getGallery');
     // inspector api's
     Route::post('getAllAppointments',  'ApiController@getAllAppointments');
     Route::post('getAppointmentDetails',  'ApiController@getAppointmentDetails');

@@ -58,6 +58,7 @@
                             <th>Model</th>
                             <th>Type</th>
                             <th>Owner</th>
+                            <th>Registration Fee</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
                         </tr>
@@ -71,23 +72,24 @@
                                 <td>{{ $car->model }}</td>
                                 <td>{{ $car->type }}</td>
                                 <td>{{ $car->owner->first_name }}</td>
+                                <td>{{ $car->registration_fee }}</td>
                                 <td>{{ $car->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/channel/' . $car->id ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/cars/' . $car->id ) }}"><i class="livicon"
                                                                                                      data-name="info"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="View Channel"></i></a>
-                                    <a href="{{ URL::to('admin/channel/' . $car->id . '/edit' ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/cars/' . $car->id . '/edit' ) }}"><i class="livicon"
                                                                                                      data-name="edit"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="Update Channel"></i></a>
-                                    <a href="{{ route('admin.channel.destroy', $car->id) }}" data-toggle="modal" data-id="{{$car->id }}"
+                                    <a href="{{ route('admin.cars.destroy', $car->id) }}" data-toggle="modal" data-id="{{$car->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"
@@ -121,11 +123,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="deleteLabel">Delete Channel</h4>
+                    <h4 class="modal-title" id="deleteLabel">Delete Car</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure to delete this Channel? This operation is irreversible.
+                    Are you sure to delete this Car? This operation is irreversible.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -146,7 +148,7 @@ $('#delete_confirm').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
     var $recipient = button.data('id');
     var modal = $(this)
-    modal.find('.modal-footer a').prop("href",$url_path+"/admin/channel/"+$recipient+"/delete");
+    modal.find('.modal-footer a').prop("href",$url_path+"/admin/cars/"+$recipient+"/delete");
 })
 </script>
 @stop

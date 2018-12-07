@@ -102,7 +102,29 @@
             </li>
         </ul>
     </li>
-
+    <!--  -->
+    <li {!! (Request::is('admin/contraventions') ||Request::is('admin/contraventions/*') ? 'class="active"' : '') !!}>
+        <a href="#">
+            <i class="livicon" data-name="user" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
+               data-loop="true"></i>
+            <span class="title">Contraventions</span>
+            <span class="fa arrow"></span>
+        </a>
+        <ul class="sub-menu">
+            <li {!! (Request::is('admin/contraventions') ? 'class="active" id="active"' : '') !!}>
+                <a href="{{ URL::to('admin/contraventions') }}">
+                    <i class="fa fa-angle-double-right"></i>
+                    Contraventions
+                </a>
+            </li>
+            <li {!! (Request::is('admin/contraventions/create') ? 'class="active" id="active"' : '') !!}>
+                <a href="{{ URL::to('admin/contraventions/create') }}">
+                    <i class="fa fa-angle-double-right"></i>
+                    Add New Contraventions
+                </a>
+            </li>
+        </ul>
+    </li>
     <!--  -->
      <li {!! (Request::is('admin/users') || Request::is('admin/users/create') || Request::is('admin/user_profile') || Request::is('admin/users/*') || Request::is('admin/deleted_users') ? 'class="active"' : '') !!}>
         <a href="#">

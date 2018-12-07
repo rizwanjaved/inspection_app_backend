@@ -16,8 +16,8 @@ class CreateInspectionsTable extends Migration
         Schema::create('inspections', function (Blueprint $table) {
             $table->increments('id');
             $table->string('result');
-            $table->string('location');
-            $table->text('details');
+            $table->string('location')->nullable();
+            $table->text('details')->nullable();;
             $table->unsignedInteger('car_id');
             $table->unsignedInteger('inspected_by');
             $table->unsignedInteger('appointment_id');

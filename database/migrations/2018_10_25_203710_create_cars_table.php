@@ -17,6 +17,7 @@ class CreateCarsTable extends Migration
             $table->increments('id');
             $table->string('car_no');
             $table->string('model');
+            $table->integer('registration_fee')->default(20);
             $table->unsignedInteger('car_type_id');
             $table->unsignedInteger('owner_id');
             $table->timestamps();

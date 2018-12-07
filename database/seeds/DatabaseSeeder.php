@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
         $this->call(DatatablesSeeder::class);
         $this->call(CountrySeeder::class);
+        $this->call(CarTypeSeeder::class);
     }
 }

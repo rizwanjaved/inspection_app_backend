@@ -39,12 +39,6 @@ Route::group(['prefix' => 'admin', 'namespace'=>'Admin'], function () {
     });
 
 
-    # Register2
-    Route::get('register2', function () {
-        return view('admin/register2');
-    });
-    Route::post('register2', 'AuthController@postRegister2')->name('register2');
-
     # Forgot Password Confirmation
     Route::get('forgot-password/{userId}/{passwordResetCode}', 'AuthController@getForgotPasswordConfirm')->name('forgot-password-confirm');
     Route::post('forgot-password/{userId}/{passwordResetCode}', 'AuthController@getForgotPasswordConfirm');
@@ -59,11 +53,7 @@ Route::group(['prefix' => 'admin', 'namespace'=>'Admin'], function () {
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin', 'as' => 'admin.'], function () {
     # GUI Crud Generator
-    Route::get('generator_builder', '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@builder')->name('generator_builder');
-    Route::get('field_template', '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@fieldTemplate');
-    Route::post('generator_builder/generate', '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@generate');
-    // Model checking
-    Route::post('modelCheck', 'ModelcheckController@modelCheck');
+
 
     # Dashboard / Index
     Route::get('/', 'JoshController@showHome')->name('dashboard');
@@ -157,74 +147,20 @@ Route::group(['prefix' => 'admin','namespace'=>'Admin', 'middleware' => 'admin',
     Route::get('datatables', 'DataTablesController@index')->name('index');
     Route::get('datatables/data', 'DataTablesController@data')->name('datatables.data');
 
-    # datatables
-    Route::get('jtable/index', 'JtableController@index')->name('index');
-    Route::post('jtable/store', 'JtableController@store')->name('store');
-    Route::post('jtable/update', 'JtableController@update')->name('update');
-    Route::post('jtable/delete', 'JtableController@destroy')->name('delete');
+
 
 
 
     # SelectFilter
-    Route::get('selectfilter', 'SelectFilterController@index')->name('selectfilter');
-    Route::get('selectfilter/find', 'SelectFilterController@filter')->name('selectfilter.find');
-    Route::post('selectfilter/store', 'SelectFilterController@store')->name('selectfilter.store');
-
-    # editable datatables
-    Route::get('editable_datatables', 'EditableDataTablesController@index')->name('index');
-    Route::get('editable_datatables/data', 'EditableDataTablesController@data')->name('editable_datatables.data');
-    Route::post('editable_datatables/create', 'EditableDataTablesController@store')->name('store');
-    Route::post('editable_datatables/{id}/update', 'EditableDataTablesController@update')->name('update');
-    Route::get('editable_datatables/{id}/delete', 'EditableDataTablesController@destroy')->name('editable_datatables.delete');
-
-//    # custom datatables
-    Route::get('custom_datatables', 'CustomDataTablesController@index')->name('index');
-    Route::get('custom_datatables/sliderData', 'CustomDataTablesController@sliderData')->name('custom_datatables.sliderData');
-    Route::get('custom_datatables/radioData', 'CustomDataTablesController@radioData')->name('custom_datatables.radioData');
-    Route::get('custom_datatables/selectData', 'CustomDataTablesController@selectData')->name('custom_datatables.selectData');
-    Route::get('custom_datatables/buttonData', 'CustomDataTablesController@buttonData')->name('custom_datatables.buttonData');
-    Route::get('custom_datatables/totalData', 'CustomDataTablesController@totalData')->name('custom_datatables.totalData');
-
-    //tasks section
-    Route::post('task/create', 'TaskController@store')->name('store');
-    Route::get('task/data', 'TaskController@data')->name('data');
-    Route::post('task/{task}/edit', 'TaskController@update')->name('update');
-    Route::post('task/{task}/delete', 'TaskController@delete')->name('delete');
-
+   
     // live tv app admin routes
 
-    Route::resource('category', 'CategoryController');
-    Route::group(['prefix' => 'category'], function () {
-        Route::get('{category}/delete', 'CategoryController@destroy')->name('category.delete');
-    });
 
-    Route::resource('region', 'RegionController');
-        Route::group(['prefix' => 'region'], function () {
-        Route::get('{region}/delete', 'RegionController@destroy')->name('region.delete');
-    });
-
-    Route::resource('channel', 'ChannelController');
-        Route::group(['prefix' => 'channel'], function () {
-        Route::get('{channel}/delete', 'ChannelController@destroy')->name('channel.delete');
-    });
-
-    Route::resource('event', 'EventController');
-
-    Route::group(['prefix' => 'event'], function () {
-        Route::get('{event}/delete', 'EventController@destroy')->name('event.delete');
-    });
-    // vod section 
-    Route::resource('vod', 'VodController');
-    Route::get('vodc', 'VodController@catIndex')->name('catIndex');
-    Route::get('vodc/create', 'VodController@catCreate')->name('catCreate');
-    Route::post('vodc/create', 'VodController@catStore')->name('catStore');
-    Route::get('vodc/{category}/edit', 'VodController@catEdit')->name('catUpdate');
-    Route::put('vodc/{category}/update', 'VodController@catUpdate')->name('catUpdate');
-    Route::get('vodc/{category}/delete', 'VodController@catDelete')->name('catDelete');
-    
+   
     // cars section
     Route::resource('cars', 'CarsController');
     Route::resource('appointments', 'AppointmentsController');
+    Route::resource('contraventions', 'contraventionsController');
     Route::resource('inspections', 'InspectionsController');
     Route::resource('registrations', 'RegistrationsController');
 
@@ -240,50 +176,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 });
 
 #FrontEndController
-Route::get('login', 'FrontEndController@getLogin')->name('login');
-Route::post('login', 'FrontEndController@postLogin')->name('login');
-Route::get('register', 'FrontEndController@getRegister')->name('register');
-Route::post('register','FrontEndController@postRegister')->name('register');
-Route::get('activate/{userId}/{activationCode}','FrontEndController@getActivate')->name('activate');
-Route::get('forgot-password','FrontEndController@getForgotPassword')->name('forgot-password');
-Route::post('forgot-password', 'FrontEndController@postForgotPassword');
-
-#Social Logins
-Route::get('facebook', 'Admin\FacebookAuthController@redirectToProvider');
-Route::get('facebook/callback', 'Admin\FacebookAuthController@handleProviderCallback');
-
-Route::get('linkedin', 'Admin\LinkedinAuthController@redirectToProvider');
-Route::get('linkedin/callback', 'Admin\LinkedinAuthController@handleProviderCallback');
-
-Route::get('google', 'Admin\GoogleAuthController@redirectToProvider');
-Route::get('google/callback', 'Admin\GoogleAuthController@handleProviderCallback');
-
-# Forgot Password Confirmation
-Route::post('forgot-password/{userId}/{passwordResetCode}/{type}', 'FrontEndController@postForgotPasswordConfirm');
-Route::get('forgot-password/{userId}/{passwordResetCode}/{type}', 'FrontEndController@getForgotPasswordConfirm')->name('forgot-password-confirm');
-# My account display and update details
-Route::group(['middleware' => 'user'], function () {
-    Route::put('my-account', 'FrontEndController@update');
-    Route::get('my-account', 'FrontEndController@myAccount')->name('my-account');
-});
-Route::get('logout', 'FrontEndController@getLogout')->name('logout');
-# contact form
-Route::post('contact', 'FrontEndController@postContact')->name('contact');
 
 #frontend views
 Route::get('/', ['as' => 'home', function () {
     return redirect('/admin/');//view('index');
 }]);
 
-
-Route::get('blog','BlogController@index')->name('blog');
-Route::get('blog/{slug}/tag', 'BlogController@getBlogTag');
-Route::get('blogitem/{slug?}', 'BlogController@getBlog');
-Route::post('blogitem/{blog}/comment', 'BlogController@storeComment');
-
-//news
-Route::get('news', 'NewsController@index')->name('news');
-Route::get('news/{news}', 'NewsController@show')->name('news.show');
-
-Route::get('{name?}', 'FrontEndController@showFrontEndView');
-# End of frontend views
