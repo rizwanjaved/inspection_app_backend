@@ -245,7 +245,7 @@ class ApiController extends Controller
     // *************inspector********************//
     public function getAllAppointments(Request $request) {
         $user = Auth::user();
-        $appointments =  Appointment::with('car')->get();
+        $appointments =  Appointment::with('car')->orderBy('booking_date', 'asc')->where('checked_by', null)->get();
         return response()->json([
                 'success' => true,
                 'user' => $user,
@@ -253,6 +253,7 @@ class ApiController extends Controller
                 'message' => 'new profile is created'
             ], 200); 
     }
+
      public function getAppointmentDetails(Request $request) {
         $validator = Validator::make($request->all(), [ 
             'appointment_id' => 'required|exists:appointments,id', 
@@ -271,39 +272,12 @@ class ApiController extends Controller
                 'message' => 'new profile is created'
             ], 200); 
     }
-    public function postInspection(Request $request) {
-        $validator = Validator::make($request->all(), [ 
-            'appointment_id' => 'required|exists:appointments,id|unique:inspections,appointment_id', 
-             'result'    => 'required', 
-            'location'  => 'required', 
-            'details'   => 'required', 
-            'car_id'    => 'required', 
-            'inspected_by' => 'required', 
-            'inspection_date' => 'required|date', 
-        ]);
-        if ($validator->fails()) { 
-            return response()->json([
-                'success' => false,
-                'message' => 'not validated',
-                'error'=>$validator->errors()
-            ], 401);            
-        }
-        $inspection = Inspection::create($request->all());
-        if($inspection) {
-            return response()->json([
-                    'success' => true,
-                    'inspection' => $inspection,
-                    'message' => 'new profile is created'
-                ], 200); 
-        } else {
-            $this->requestNotCompleted();
-        }
-    }
+
+
     public function postAppointment(Request $request) {
         $validator = Validator::make($request->all(), [ 
             'car_id'    => 'required', 
             'submitted_by'  => 'required|unique:appointments,submitted_by', 
-            'description'   => 'required', 
             'submitted_date'    => 'required', 
         ]);
         if ($validator->fails()) { 
@@ -313,7 +287,10 @@ class ApiController extends Controller
                 'error'=>$validator->errors()
             ], 401);            
         }
-        $appointment = Appointment::create($request->all());
+        $data = [];
+        $data = $request->all();
+        $data['booking_date'] = $this->getBookingTime($request->submitted_date);
+        $appointment = Appointment::create($data);
         if($appointment) {
             return response()->json([
                     'success' => true,
@@ -324,7 +301,7 @@ class ApiController extends Controller
             $this->requestNotCompleted();
         }
     }
-    // 
+    
     public function viewAppointment(Request $request) {
         $user_id = Auth::user()->id;
         $appointment =  Appointment::where('submitted_by', $user_id)->with('car')->first();
@@ -351,6 +328,36 @@ class ApiController extends Controller
             return $this->requestNotCompleted();
         }
     }
+
+    public function postInspection(Request $request) {
+        $validator = Validator::make($request->all(), [ 
+            'appointment_id' => 'required|exists:appointments,id|unique:inspections,appointment_id', 
+            'result'    => 'required', 
+            'car_id'    => 'required', 
+            'inspected_by' => 'required', 
+            'inspection_date' => 'required|date', 
+        ]);
+        if ($validator->fails()) { 
+            return response()->json([
+                'success' => false,
+                'message' => 'not validated',
+                'error'=>$validator->errors()
+            ], 401);            
+        }
+        $inspection = Inspection::create($request->all());
+        $appointment = Appointment::find($request->appointment_id);
+        $appointment->checked_by = $request->inspected_by;
+        if($inspection) {
+            $appointment->save();
+            return response()->json([
+                    'success' => true,
+                    'inspection' => $inspection,
+                    'message' => 'new profile is created'
+                ], 200); 
+        } else {
+            $this->requestNotCompleted();
+        }
+    }
     // 
      public function viewInspection(Request $request) {
         $user = Auth::user();
@@ -369,23 +376,12 @@ class ApiController extends Controller
             return $this->requestNotCompleted();
         }
     }
+
     public function registration(Request $request) {
         $validator = Validator::make($request->all(), [ 
             'car_id'    => 'required|unique:registrations,car_id', 
-            'late_fee'  => 'required', 
-            'registration_fee'   => 'required', 
+            'registration_date'   => 'required', 
         ]);
-        $validator->after(function($validator) use ($request){
-            $car = Car::find($request->car_id);
-            $reg_fee =  $car->type->registration_fee;
-            $late_fee =  $car->type->late_fee;
-            if ($request->registration_fee < $reg_fee) {
-                $validator->errors()->add('registration_fee', 'The Registration fee must not less then '.$reg_fee);
-            }
-            if ($request->late_fee < $late_fee) {
-                $validator->errors()->add('late_fee', 'The Late fee must not less then '.$late_fee);
-            }
-        });
         if ($validator->fails()) { 
             return response()->json([
                 'success' => false,
@@ -403,11 +399,21 @@ class ApiController extends Controller
             $this->requestNotCompleted();
         }
     }
-    public function contravention(Request $request) {
+
+     public function getAllContraventions(Request $request) {
+        $user = Auth::user();
+        $contraventions = Contravention::where('car_owner_id', $user->id)->where('status', 0)->get();
+        return response()->json([
+                'success' => true,
+                'contraventions' => $contraventions,
+                'message' => 'new profile is created'
+            ], 200); 
+    }
+
+    public function addContravention(Request $request) {
         $validator = Validator::make($request->all(), [ 
-            'car_id'    => 'required', 
-            'fee'  => 'required', 
-            'description'  => 'required', 
+            'contravention_id'    => 'required', 
+            'submitted_date'  => 'required', 
         ]);
         if ($validator->fails()) { 
             return response()->json([
@@ -428,57 +434,7 @@ class ApiController extends Controller
     }
     
     /**************************************** */
-    public function addChildProfile(Request $request) 
-    { 
-        $user = Auth::user();
-        $validator = Validator::make($request->all(), [ 
-            'name' => 'required', 
-            'age_group' => 'required', 
-            'image' => 'required|image', 
-        ]);
-        $validator->after(function($validator) use ($request){
-            if (!$this->validateChildProfile($request->name)) {
-                $validator->errors()->add('name', 'The profile name is already taken');
-            }
-        });
-        if ($validator->fails()) { 
-            return response()->json([
-                'success' => false,
-                'message' => 'not validated',
-                'error'=>$validator->errors()
-            ], 401);            
-        }
-        $profile = new Profile($request->except('image'));
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $extension = $file->extension()?: 'png';
-            $picture = str_random(10) . '.' . $extension;
-            $destinationPath = public_path() . '/uploads/profiles/';
-            $file->move($destinationPath, $picture);
-            $profile->image = url('uploads/profiles/').'/'.$picture;
-        }
-        $profile->parent_id = $user->id;
-        if($profile->save()) {
-            return response()->json([
-                'success' => true,
-                'user' => $user,
-                'profile' => $profile,
-                'message' => 'new profile is created'
-            ], 200); 
-        } else {
-            $this->requestNotCompleted();
-        }
-    } 
-    public function getProfiles(Request $request) 
-    { 
-        $user = Auth::user();
-        return response()->json([
-            'success' => true,
-            'user' => $user,
-            'profiles' => $user->profiles,
-            'message' => 'all profiles'
-        ], 200); 
-    } 
+   
     /************ *************/
     public function forgotPassword(Request $request)
     {   
@@ -510,96 +466,7 @@ class ApiController extends Controller
             ], 401); 
         }
     }
-    /**********/
-    public function postGallery(Request $request) {
-        $user = Auth::user();
-        $validator = Validator::make($request->all(), [ 
-            // 'image' => 'required_without:video|image', 
-            // 'video' => 'required_without:image|mimes:jpeg,bmp,png:video/avi,
-            //                                     video/x-flv,video/mp4,
-            //                                     video/mpeg,video/3gpp,
-            //                                     video/quicktime', 
-            'media' => 'required|mimes:jpeg,bmp,png,mp4,mov,ogg,qt,flv,3gp,avi,mkv|max:20000',
-            'profile_id' => 'required|exists:profiles,id'
-        ]);
-        if ($validator->fails()) { 
-            return response()->json([
-                'success' => false,
-                'message' => 'not validated',
-                'error'=>$validator->errors()
-            ], 401);            
-        }
-        if ($request->hasFile('media')) {
-            $file = $request->file('media');
-            $extension = $file->extension() ? : "unknown";
-            $media = str_random(10) . '.' . $extension;
-            $mimeType = File::mimeType($file);
-            $mediaType = (explode('/', $mimeType))[0];
-            $destinationPath = public_path() . '/uploads/gallery/';
-            $file->move($destinationPath, $media);
-            $mediaUrl = url('uploads/gallery/').'/'.$media;
-        }
-        $gallery =  new Gallery;
-        $gallery->media = $mediaUrl;
-        $gallery->profile_id = $request->profile_id;
-        $gallery->type = $mediaType;
-        if($gallery->save()) {
-            return response()->json([
-                'success' => true,
-                'message' => $mediaType.' is saved successfully'
-            ], 200); 
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'media not saved',
-                'error'=> "unable to save media"
-            ], 401);     
-        }
-    }
-    public function getGallery(Request $request) {
-        $user = Auth::user();
-        $validator = Validator::make($request->all(), [ 
-            'profile_id' => 'required|exists:profiles,id'
-        ]);
-        if ($validator->fails()) { 
-            return response()->json([
-                'success' => false,
-                'message' => 'not validated',
-                'error'=>$validator->errors()
-            ], 401);            
-        }
-        $profile = Profile::find($request->profile_id);
-        $count = count($profile->galleryItems);
-        return response()->json([
-            'success'   => true,
-            'gallery'   => $profile->galleryItems,
-            'items'     => $count,
-            'message'   => $count.' gallery items found'
-        ], 200); 
-    }
-    /*********** **********/ 
-    public function validateChildProfile($name) {
-        $user = Auth::user();
-        $profiles = Profile::where([
-            ['parent_id','=' ,$user->id],
-            ['name','=',$name]
-        ])->get();
-        return (count($profiles)>0) ? false :true; 
-    }
-    public function validateUserEmail($email) {
-        $user = Sentinel::findByCredentials(['email' => $email]);
-        if(!$user) {
-            return false;
-        }
-        $activation = Activation::completed($user);
-        if($activation) {
-            return true;
-        } else {
-            $user->forceDelete();
-            return false;
-        }
-    }
-    
+
     //*************************///// 
     public function random_key($size) {
 	$alpha_key = '';
@@ -615,12 +482,38 @@ class ApiController extends Controller
 	}
 	return $alpha_key . $key;
     }
+
     public function requestNotCompleted() {
         return response()->json([
             'success' => false,
             'message' => 'unable to complete request',
             'error'=> 'request not completed'
         ], 401);   
+    }
+
+    public function getBookingTime($current_sub_date) {
+        $count = Appointment::count();
+        if($count == 0) {
+            $d = new Carbon($current_sub_date);
+            $d->hour = 6;
+            $d->minute = 0;
+            $d->second = 0;
+            return $d->addDay()->toDateTimeString();
+        } else {
+            $d = (new Carbon($current_sub_date))->addDay();
+            $date = $d->toDateString();
+            $lastAppointment =  Appointment::OrderBy('booking_date', 'desc')->first();
+            $dd = new Carbon($lastAppointment->booking_date);
+            if($dd->hour >= 16 || ($dd->hour == 15 && $dd->minute + 10 >= 59) || !$lastAppointment) {
+                dd($lastAppointment);
+                $dd->hour = 6;
+                $dd->minute = 0;
+                $dd->second = 0;
+                return $dd->addDay()->toDateTimeString();
+            } else{
+                return $dd->addMinutes(10)->toDateTimeString();
+            }
+        }
     }
 
 }

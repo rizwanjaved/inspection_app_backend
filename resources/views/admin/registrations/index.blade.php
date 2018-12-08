@@ -55,8 +55,6 @@
                         <tr class="filters">
                             <th>@lang('blog/table.id')</th>
                             <th>Car No</th>
-                            <th>Registration Fee</th>
-                            <th>Late Fee</th>
                             <th>Registration Date</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
@@ -68,26 +66,24 @@
                             <tr>
                                 <td>{{ $registration->id }}</td>
                                 <td>{{ $registration->car->car_no }}</td>
-                                <td>{{ $registration->registration_fee }}</td>
-                                <td>{{ $registration->late_fee }}</td>
-                                <td>{{ $registration->created_at }}</td>
+                                <td>{{ $registration->registration_date }}</td>
                                 <td>{{ $registration->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/channel/' . $registration->id ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/registration/' . $registration->id ) }}"><i class="livicon"
                                                                                                      data-name="info"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="View Channel"></i></a>
-                                    <a href="{{ URL::to('admin/channel/' . $registration->id . '/edit' ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/registration/' . $registration->id . '/edit' ) }}"><i class="livicon"
                                                                                                      data-name="edit"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="Update Channel"></i></a>
-                                    <a href="{{ route('admin.channel.destroy', $registration->id) }}" data-toggle="modal" data-id="{{$registration->id }}"
+                                    <a href="#" data-toggle="modal" data-id="{{$registration->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"

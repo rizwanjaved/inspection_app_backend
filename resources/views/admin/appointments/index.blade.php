@@ -58,6 +58,7 @@
                             <th>submitted By</th>
                             <th>description</th>
                             <th>submitted on</th>
+                            <th>Booking Date</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
                         </tr>
@@ -71,23 +72,24 @@
                                 <td>{{ $appointment->submittedByUser->first_name }}</td>
                                 <td>{{ $appointment->description }}</td>
                                 <td>{{ $appointment->submitted_date }}</td>
+                                <td>{{ $appointment->booking_date }}</td>
                                 <td>{{ $appointment->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/channel/' . $appointment->id ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/appointments/' . $appointment->id ) }}"><i class="livicon"
                                                                                                      data-name="info"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="View Channel"></i></a>
-                                    <a href="{{ URL::to('admin/channel/' . $appointment->id . '/edit' ) }}"><i class="livicon"
+                                    <a href="{{ URL::to('admin/appointments/' . $appointment->id . '/edit' ) }}"><i class="livicon"
                                                                                                      data-name="edit"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="Update Channel"></i></a>
-                                    <a href="{{ route('admin.channel.destroy', $appointment->id) }}" data-toggle="modal" data-id="{{$appointment->id }}"
+                                    <a href="" data-toggle="modal" data-id="{{$appointment->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"

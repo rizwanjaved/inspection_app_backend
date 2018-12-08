@@ -5,11 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Channel;
-use App\Category;
-use App\Region;
-use App\Link;
 use App\Car;
+use App\Contravention;
 use App\User;
 use App\Http\Requests;
 use Response;
@@ -20,7 +17,7 @@ use Validator;
 use Redirect;
 use Illuminate\Support\Facades\DB;
 
-class CarsController extends Controller
+class ContraventionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -29,10 +26,9 @@ class CarsController extends Controller
      */
     public function index()
     {
-        $cars = Car::select('cars.*','car_types.type')
-                    ->join('car_types', 'cars.car_type_id', '=', 'car_types.id')->get();
+        $contraventions = Contravention::with('type', 'car')->get();
         // dd(empty($cars));
-        return view('admin.cars.index', compact('cars'));
+        return view('admin.contraventions.index', compact('contraventions'));
     }
 
     /**
@@ -42,15 +38,10 @@ class CarsController extends Controller
      */
     public function create()
     {  
-        $carTypes = DB::table('car_types')->pluck('type', 'id');
-        $groups = Sentinel::getRoleRepository()->where('slug','=','user')->get();
-        // $users = User::all();
-        // foreach($users as $user) {
-
-        // }
-        $role = Sentinel::findRoleById(2);
-        $users = $role->users->pluck('first_name' , 'id');
-        return view('admin.cars.create', compact('carTypes', 'users'));
+        $contravention_types = DB::table('contravention_types')->pluck('text', 'id');
+        $types = DB::table('contravention_types')->get();
+        $cars = Car::all()->pluck('car_no', 'id');
+        return view('admin.contraventions.create', compact('contravention_types', 'cars', 'types'));
     }
 
     /**
@@ -63,22 +54,23 @@ class CarsController extends Controller
     {
         // dd($request->all());
         $this->Validate($request,[
-        'car_no' => 'required|min:3|unique:cars',
-        'model' => 'required',
-        'car_type_id' => 'required',
-        'owner_id' => 'required',
+        'car_id' => 'required|',
+        'due_date' => 'required',
+        'contravention_type' => 'required'
         ]);
+        $details = DB::table('contravention_types')->find($request->contravention_type);
+        $car = Car::find($request->car_id);
         $data = [];
         $data = $request->all();
-        if(!$request->registration_fee) {
-            $data['registration_fee'] = 20;
-        }
-        $car = new Car($data);//->except('image','links'));
+        $data['status'] = false;
+        $data['fee'] = $details->amount;
+        $data['car_owner_id'] = $car->owner->id;
+        $contravention = new Contravention($data);//->except('image','links'));
         // foreach <img> in the submited message
-        if ($car->save()) {
-            return redirect('admin/cars')->with('success', trans('car Successfully created'));
+        if ($contravention->save()) {
+            return redirect('admin/contraventions')->with('success', trans('contravention Successfully created'));
         } else {
-            return Redirect::route('admin/cars')->withInput()->with('error', trans('general.error.wrong'));
+            return Redirect::route('admin/contraventions')->withInput()->with('error', trans('general.error.wrong'));
         }
     }
 
