@@ -74,7 +74,7 @@
 
                         <div class="form-group {{ $errors->first('registration_fee', 'has-error') }}">
                             {!! Form::label('registration_fee',' Amount') !!}
-                            {!! Form::number('registration_fee', null, array('class' => 'form-control input-lg contravention_amount','disabled','placeholder'=> trans('blog/form.ph-title'))) !!}
+                            {!! Form::text('registration_fee', null, array('class' => 'form-control input-lg contravention_amount','disabled','placeholder'=> trans('blog/form.ph-title'))) !!}
                             <span class="help-block">{{ $errors->first('registration_fee', ':message') }}</span>
                         </div>
 
@@ -111,17 +111,19 @@
         $(this).removeData('bs.modal');
     });
     $(document).ready(function(){
-        var types ='<?=$types ?>';
+        var types =JSON.parse('<?=$types ?>');
         var el =  $('#contravention_type');
         if(el.val()){
             setAmount()
         }
         el.change(function() {
-            //   console.log('zzzzzzzzzzz','<?=$types ?>');
-            setAmount();
+              if(el.val()){
+                    setAmount()
+                }
         });
         var setAmount = function() {
-            $('.contravention_amount').val(el.val());
+            var obj = types.find((x)=> {return x.id==el.val() ? x : ''});
+            $('.contravention_amount').val(obj.amount);
         }
     });
 </script>

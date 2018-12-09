@@ -56,7 +56,7 @@
                             <th>@lang('blog/table.id')</th>
                             <th>Result</th>
                             <th>Location</th>
-                            <th>car model</th>
+                            <th>car number</th>
                             <th>inspected By</th>
                             <th>@lang('blog/table.created_at')</th>
                             <th>@lang('blog/table.actions')</th>
@@ -69,7 +69,7 @@
                                 <td>{{ $inspection->id }}</td>
                                 <td>{{ $inspection->result }}</td>
                                 <td>{{ $inspection->location }}</td>
-                                <td>{{ $inspection->car->model }}</td>
+                                <td>{{ $inspection->car->car_no }}</td>
                                 <td>{{ $inspection->inspectedBy->first_name }}</td>
                                 <td>{{ $inspection->created_at->diffForHumans() }}</td>
                                 <td>
@@ -87,7 +87,7 @@
                                                                                                      data-c="#428BCA"
                                                                                                      data-hc="#428BCA"
                                                                                                      title="Update Channel"></i></a>
-                                    <a href="{{ route('admin.channel.destroy', $inspection->id) }}" data-toggle="modal" data-id="{{$inspection->id }}"
+                                    <a href="#" data-toggle="modal" data-id="{{$inspection->id }}"
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"

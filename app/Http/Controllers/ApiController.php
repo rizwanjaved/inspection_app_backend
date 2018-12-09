@@ -289,6 +289,7 @@ class ApiController extends Controller
         }
         $data = [];
         $data = $request->all();
+        $data['submitted_date'] = (new Carbon($request->submitted_date))->toDateTimeString();
         $data['booking_date'] = $this->getBookingTime($request->submitted_date);
         $appointment = Appointment::create($data);
         if($appointment) {
@@ -402,7 +403,7 @@ class ApiController extends Controller
 
      public function getAllContraventions(Request $request) {
         $user = Auth::user();
-        $contraventions = Contravention::where('car_owner_id', $user->id)->where('status', 0)->get();
+        $contraventions = Contravention::with('type')->where('car_owner_id', $user->id)->where('status', 0)->get();
         return response()->json([
                 'success' => true,
                 'contraventions' => $contraventions,
@@ -422,8 +423,11 @@ class ApiController extends Controller
                 'error'=>$validator->errors()
             ], 401);            
         }
-        $contravention = contravention::create($request->all());
-        if($contravention) {
+        $contravention = contravention::find($request->contravention_id);
+        $contravention->submitted_date = $request->submitted_date;
+        $contravention->description = $request->description;
+        $contravention->status = true;
+        if($contravention->save()) {
             return response()->json([
                     'success' => true,
                     'message' => 'new profile is created'
