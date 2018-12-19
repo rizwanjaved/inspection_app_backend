@@ -160,7 +160,7 @@ Route::group(['prefix' => 'admin','namespace'=>'Admin', 'middleware' => 'admin',
     // cars section
     Route::resource('cars', 'CarsController');
     Route::resource('appointments', 'AppointmentsController');
-    Route::resource('contraventions', 'contraventionsController');
+    Route::resource('contraventions', 'ContraventionsController');
     Route::resource('inspections', 'InspectionsController');
     Route::resource('registrations', 'RegistrationsController');
 

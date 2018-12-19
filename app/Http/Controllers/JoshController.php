@@ -389,7 +389,7 @@ class JoshController extends Controller {
 
         $chart_data = User::select(DB::raw( "COUNT(*) as count_row"))
             ->orderBy("created_at")
-            ->groupBy(DB::raw("month(created_at)"))
+            // ->groupBy(DB::raw("month(created_at)"))
             ->get();
         $db_chart =  Charts::database(User::all(), 'area', 'morris')
             ->elementLabel("Users")
