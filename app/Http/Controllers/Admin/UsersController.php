@@ -32,6 +32,7 @@ class UsersController extends JoshController
     {
 
         // Show the page
+         $users = User::get(['id', 'first_name', 'last_name', 'email','created_at']);
         return view('admin.users.index', compact('users'));
     }
 

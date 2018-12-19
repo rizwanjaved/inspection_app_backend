@@ -69,7 +69,7 @@
                             <tr>
                                 <td>{{ $appointment->id }}</td>
                                 <td>{{ $appointment->car->car_no }}</td>
-                                <td>{{ $appointment->submittedByUser->first_name }}</td>
+                                <td>{{ $appointment->submittedByUser ? $appointment->submittedByUser->first_name : '' }}</td>
                                 <td>{{ $appointment->description }}</td>
                                 <td>{{ $appointment->submitted_date }}</td>
                                 <td>{{ $appointment->booking_date }}</td>

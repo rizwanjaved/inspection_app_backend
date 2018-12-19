@@ -71,7 +71,7 @@
                                 <td>{{ $car->car_no }}</td>
                                 <td>{{ $car->model }}</td>
                                 <td>{{ $car->type }}</td>
-                                <td>{{ $car->owner->first_name }}</td>
+                                <td>{{ $car->owner ? $car->owner->first_name : 'not assigned' }}</td>
                                 <td>{{ $car->registration_fee }}</td>
                                 <td>{{ $car->created_at->diffForHumans() }}</td>
                                 <td>
