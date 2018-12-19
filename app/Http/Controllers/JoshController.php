@@ -387,10 +387,11 @@ class JoshController extends Controller {
         $blogs = '';//Blog::orderBy('id','desc')->take(5)->get()->load('category','author');
         $users = User::orderBy('id', 'desc')->take(5)->get();
 
-        $chart_data = User::select(DB::raw( "COUNT(*) as count_row"))
-            ->orderBy("created_at")
-            // ->groupBy(DB::raw("month(created_at)"))
-            ->get();
+        $chart_data = '';
+        // User::select(DB::raw( "COUNT(*) as count_row"))
+        //     ->orderBy("created_at")
+        //     ->groupBy(DB::raw("month(created_at)"))
+        //     ->get();
         $db_chart =  Charts::database(User::all(), 'area', 'morris')
             ->elementLabel("Users")
             ->dimensions(0, 250)
