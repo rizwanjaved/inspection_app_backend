@@ -73,7 +73,7 @@
                                 <td>{{ $inspection->inspectedBy->first_name }}</td>
                                 <td>{{ $inspection->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/channel/' . $inspection->id ) }}"><i class="livicon"
+                                    <!-- <a href="{{ URL::to('admin/channel/' . $inspection->id ) }}"><i class="livicon"
                                                                                                      data-name="info"
                                                                                                      data-size="18"
                                                                                                      data-loop="true"
@@ -91,7 +91,7 @@
                                        data-target="#delete_confirm"><i class="livicon" data-name="remove-alt"
                                                                         data-size="18" data-loop="true" data-c="#f56954"
                                                                         data-hc="#f56954"
-                                                                        title="Delete Channel"></i></a>
+                                                                        title="Delete Channel"></i></a> -->
                                 </td>
                             </tr>
                         @endforeach
