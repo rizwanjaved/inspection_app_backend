@@ -9,7 +9,7 @@
         "prod": "npm run production"
     },
     "devDependencies": {
-        "axios": "^0.16.2",
+        "axios": "^0.19.1",
         "cross-env": "^5.0.1",
         "jquery": "^3.1.1",
         "jquery-ui": "^1.12.1",
